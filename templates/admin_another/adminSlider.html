@@ -1,0 +1,373 @@
+{% extends 'admin_another/adminbase.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <h2 class="mb-4">Add Your Slider</h2>
+
+    <!-- Add Slider Button -->
+    <button class="btn btn-dark mb-3" data-bs-toggle="modal" data-bs-target="#addSliderModal">
+        <i class="bi bi-plus-lg me-1"></i> Add Slide
+    </button>
+
+    <!-- Slider Table -->
+    <div class="table-responsive">
+        <table id="sliderTable" class="table table-bordered align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Data populated via AJAX -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Slider Modal -->
+<div class="modal fade" id="addSliderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="addSliderForm" enctype="multipart/form-data">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Slide</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Image</label>
+                <input type="file" class="form-control" id="sliderImage" name="image" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Add Slide</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Update Slider Modal -->
+<div class="modal fade" id="updateSliderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="updateSliderForm" enctype="multipart/form-data">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Update Slide</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="updateSliderId">
+            <div class="mb-3">
+                <label class="form-label">Image</label>
+                <input type="file" class="form-control" id="updateSliderImage" name="image">
+                <img id="currentSliderImage" src="" class="img-thumbnail mt-2" style="width:100px; height:100px;">
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Update Slide</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Slider Modal -->
+<div class="modal fade" id="deleteSliderModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="deleteSliderForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Slide</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            Are you sure you want to delete this slide?
+            <input type="hidden" id="deleteSliderId">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}
+
+{% block contentscript %}
+<!-- <script>
+$(document).ready(function() {
+
+    // CSRF setup
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": "{{ csrf_token }}" }
+    });
+
+    // Load slider items
+    function loadSliders() {
+        $.get('/slider/', function(data) {
+            let rows = '';
+            data.forEach(slide => {
+                rows += `
+                    <tr>
+                        <td>${slide.id}</td>
+                        <td><img src="${slide.image}" class="img-thumbnail" style="width:80px; height:80px;"></td>
+                        <td>
+                            <button class="btn btn-sm btn-success me-1" onclick="editSlider(${slide.id})">Edit</button>
+                            <button class="btn btn-sm btn-danger" onclick="confirmDeleteSlider(${slide.id})">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            });
+            $('#sliderTable tbody').html(rows);
+        });
+    }
+    loadSliders();
+
+    // Add slider
+    $('#addSliderForm').submit(function(e) {
+        e.preventDefault();
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: '/slider/',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function() {
+                $('#addSliderModal').modal('hide');
+                $('#addSliderForm')[0].reset();
+                loadSliders();
+            },
+            error: function() { alert('Error adding slide'); }
+        });
+    });
+
+    // Edit slider
+    window.editSlider = function(id) {
+        $.get(`/slider/${id}/`, function(data) {
+            $('#updateSliderId').val(data.id);
+            $('#currentSliderImage').attr('src', data.image);
+            $('#updateSliderModal').modal('show');
+        });
+    }
+
+    // Update slider
+    $('#updateSliderForm').submit(function(e) {
+        e.preventDefault();
+        let id = $('#updateSliderId').val();
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: `/slider/${id}/`,
+            method: 'PUT',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function() {
+                $('#updateSliderModal').modal('hide');
+                $('#updateSliderForm')[0].reset();
+                loadSliders();
+            },
+            error: function() { alert('Error updating slide'); }
+        });
+    });
+
+    // Delete slider
+    window.confirmDeleteSlider = function(id) {
+        $('#deleteSliderId').val(id);
+        $('#deleteSliderModal').modal('show');
+    }
+
+    $('#deleteSliderForm').submit(function(e) {
+        e.preventDefault();
+        let id = $('#deleteSliderId').val();
+
+        $.ajax({
+            url: `/slider/${id}/`,
+            method: 'DELETE',
+            success: function() {
+                $('#deleteSliderModal').modal('hide');
+                loadSliders();
+            },
+            error: function() { alert('Error deleting slide'); }
+        });
+    });
+
+});
+</script> -->
+
+<script>
+$(function() {
+    // CSRF setup for Django (keeps POST/DELETE/PATCH safe)
+    $.ajaxSetup({
+        headers: { "X-CSRFToken": "{{ csrf_token }}" }
+    });
+
+    // If DataTable already exists, destroy it first (prevents multiple-inits)
+    if ($.fn.dataTable && $.fn.dataTable.isDataTable('#sliderTable')) {
+        $('#sliderTable').DataTable().clear().destroy();
+    }
+
+    // Initialize DataTable (robust dataSrc that supports DRF pagination)
+    const sliderTable = $('#sliderTable').DataTable({
+        responsive: true,
+        autoWidth: false,
+        ajax: {
+            url: '/slider/',
+            dataSrc: function(json) {
+                // common shapes:
+                // 1) plain array: [ {...}, {...}]
+                // 2) DRF paginated: { count:.., next:.., results: [..] }
+                // 3) wrapper { data: [...] }
+                if (!json) {
+                    console.error('Empty response from /slider/:', json);
+                    return [];
+                }
+                if (Array.isArray(json)) return json;
+                if (json.results && Array.isArray(json.results)) return json.results;
+                if (json.data && Array.isArray(json.data)) return json.data;
+
+                // unexpected shape — log and return empty array
+                console.error('Unexpected response format for /slider/:', json);
+                return [];
+            },
+            error: function(xhr, status, error) {
+                console.error('Error loading /slider/:', status, error, xhr.responseText);
+                // Common cause: server returned HTML (login) due to authentication
+                const ct = xhr.getResponseHeader && xhr.getResponseHeader('Content-Type') || '';
+                if (ct.indexOf('text/html') !== -1) {
+                    alert('Server returned HTML for /slider/ — maybe you are not authenticated. Check Network tab and console.');
+                } else {
+                    alert('Failed to fetch slider data. See console for details.');
+                }
+            }
+        },
+        columns: [
+            { data: 'id' },
+            {
+                data: 'image',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    if (!data) return '';
+                    // handle relative/absolute URLs
+                    return `<img src="${data}" class="img-thumbnail" style="width:80px;height:80px;" alt="slide-${row.id}">`;
+                }
+            },
+            {
+                data: 'id',
+                orderable: false,
+                searchable: false,
+                render: function(data, type, row) {
+                    return `
+                        <button class="btn btn-sm btn-success me-1" onclick="editSlider(${data})">Edit</button>
+                        <button class="btn btn-sm btn-danger" onclick="confirmDeleteSlider(${data})">Delete</button>
+                    `;
+                }
+            }
+        ],
+        // optional: initial order
+        order: [[0, 'asc']]
+    });
+
+    // helper to reload table
+    window.loadSliders = function() {
+        sliderTable.ajax.reload(null, false);
+    };
+
+    // ----- Create -----
+    $('#addSliderForm').off('submit').on('submit', function(e) {
+        e.preventDefault();
+        const formData = new FormData(this);
+        $.ajax({
+            url: '/slider/',
+            method: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function() {
+                $('#addSliderModal').modal('hide');
+                $('#addSliderForm')[0].reset();
+                loadSliders();
+            },
+            error: function(xhr) {
+                console.error('Add slide error:', xhr);
+                alert('Error adding slide. See console for details.');
+            }
+        });
+    });
+
+    // ----- Read (populate edit modal) -----
+    window.editSlider = function(id) {
+        $.get(`/slider/${id}/`)
+            .done(function(data) {
+                $('#updateSliderId').val(data.id);
+                $('#currentSliderImage').attr('src', data.image || '');
+                $('#updateSliderModal').modal('show');
+            })
+            .fail(function(xhr) {
+                console.error('Fetch slide error:', xhr);
+                alert('Error fetching slide. See console.');
+            });
+    };
+
+    // ----- Update (use PATCH which is generally friendlier with multipart) -----
+    $('#updateSliderForm').off('submit').on('submit', function(e) {
+        e.preventDefault();
+        const id = $('#updateSliderId').val();
+        const formData = new FormData(this);
+
+        $.ajax({
+            url: `/slider/${id}/`,
+            method: 'PATCH', // PATCH is usually safer for partial multipart updates
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function() {
+                $('#updateSliderModal').modal('hide');
+                $('#updateSliderForm')[0].reset();
+                loadSliders();
+            },
+            error: function(xhr) {
+                console.error('Update slide error:', xhr);
+                alert('Error updating slide. See console for details.');
+            }
+        });
+    });
+
+    // ----- Delete -----
+    window.confirmDeleteSlider = function(id) {
+        $('#deleteSliderId').val(id);
+        $('#deleteSliderModal').modal('show');
+    };
+
+    $('#deleteSliderForm').off('submit').on('submit', function(e) {
+        e.preventDefault();
+        const id = $('#deleteSliderId').val();
+        $.ajax({
+            url: `/slider/${id}/`,
+            method: 'DELETE',
+            success: function() {
+                $('#deleteSliderModal').modal('hide');
+                loadSliders();
+            },
+            error: function(xhr) {
+                console.error('Delete slide error:', xhr);
+                alert('Error deleting slide. See console.');
+            }
+        });
+    });
+
+    // initial load handled by DataTable ajax; but you can force reload if needed:
+    // loadSliders();
+
+});
+</script>
+{% endblock %}

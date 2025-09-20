@@ -1,0 +1,60 @@
+{% extends 'mainshop/base.html' %}
+{% block content %}
+{% include 'mainshop/slider.html'%}
+{% include 'mainshop/trending.html'%}
+{% include 'mainshop/newarriable.html'%}
+{% include 'mainshop/frontpage-ourshop.html'%}
+
+<!-- <script>
+    function getCookie(name) {
+    let cookieArr = document.cookie.split(";");
+    for (let i = 0; i < cookieArr.length; i++) {
+        let cookiePair = cookieArr[i].split("=");
+        let key = cookiePair[0].trim();
+        if (key === name) {
+            return decodeURIComponent(cookiePair[1]);
+        }
+    }
+    return null;
+}
+    function sendProductId(productId) {
+    console.log(productId);
+
+    // get existing cookie
+    let wishlist = [];
+    try {
+        wishlist = JSON.parse(getCookie("wishlist") || "[]");
+        if (!Array.isArray(wishlist)) {
+            wishlist = []; // reset if not an array
+        }
+    } catch (e) {
+        wishlist = []; // reset if JSON.parse fails
+    }
+
+    // check duplicate before adding
+    if (!wishlist.includes(productId)) {
+        wishlist.push(productId);
+        document.cookie = "wishlist=" + JSON.stringify(wishlist) + "; path=/";
+    }
+    // show bootstrap alert
+    
+    // show bootstrap alert
+    $.ajax({
+        url: "/watchlist/",      
+        type: "GET",
+        data: { product_id: productId },
+        success: function(response) {
+            console.log("Product saved:", response.product_id);
+            alert("Product added!");
+            $("#wishlist-count").text(10);
+            // <div class="alert alert-success" role="alert">
+            //     This is a success alert—check it out!
+            // </div>
+        },
+        error: function(xhr, status, error) {
+            console.error("Error:", error);
+        }
+    });
+}
+</script> -->
+{% endblock %}

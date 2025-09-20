@@ -1,0 +1,9 @@
+{% load static %}
+
+{% for category in categories %}
+<li>
+    <div class="d-flex justify-content-between fruite-name">
+        <a href="/products/"><i class="fas fa-apple-alt me-2"></i>{{ category.name }}</a>
+        <span>(30)</span> 
+</li>
+{% endfor %}

@@ -1,0 +1,31 @@
+{% for product in products %}
+<div class="col-6 col-xl-2">
+    <div class="card border-secondary h-auto fruite-item position-relative">
+        <a href="product-detail.html" class="stretched-link"></a>
+        {% if product.product_image %}
+        <div class="position-relative">
+            <img src="{{ product.product_image.url }}" class="card-img-top img-fluid"
+                style="height: 200px; width: 100%; object-fit: cover;" alt="{{ product.product_name }}">
+            <span class="badge bg-secondary position-absolute top-0 start-0 m-2">{{product.categories}}</span>
+        </div>
+        {% endif %}
+
+        <div class="card-body d-flex flex-column">
+            <h5 class="card-title text-center" style="font-size: .8em">{{ product.product_name }}</h5>
+            <div class="mt-auto">
+                <p class="text-dark fs-7 fw-bold mb-3 text-center">
+                    <span style="font-size: 0.8em;">&#x09F3;</span> {{ product.product_price }}
+                </p>
+                <div class="icon-class pt-2 d-flex justify-content-center justify-content-md-between gap-1">
+                    <a href="https://your-url.com" class="btn btn-outline-dark" role="button" aria-label="Add to Cart">
+                        <i class="bi bi-heart" style="font-size: 1.4rem; color: #33393a;"></i>
+                    </a>
+                    <a href="https://your-url.com" class="btn btn-outline-dark" role="button" aria-label="Add to Cart">
+                        <i class="bi bi-cart-plus-fill" style="font-size: 1.4rem; color: #33393a;"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}

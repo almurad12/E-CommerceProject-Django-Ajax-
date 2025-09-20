@@ -1,0 +1,86 @@
+   {% load static %}
+   <!-- Trending product-->
+    <div class="container-fluid trending-product mt-3">
+            <!-- py-5 -->
+            <div class="container"> 
+                <div class="d-flex align-items-center">
+                    <span class="title-bar"></span>
+                    <h2 class="mb-0 text-color-change" style="margin-left:1%;">Trending</h2>
+                </div>
+                <!-- <br/> -->
+
+                <div class="owl-carousel trending-product-carousel justify-content-center mt-3 ">
+                     {% for product in products %}
+                    {% if product.trending %}
+                    <div class="card trending-hover border-secondary h-auto fruite-item position-relative" style="border: 1px solid #33393a !important ;">
+                        <a href="product-detail.html" class="stretched-link"></a>
+                    
+                        <div class="position-relative">
+                            <img src="{{product.product_image.url}}" class="card-img-top img-fluid" style="object-fit: cover; height: 200px; width: 100%; " alt="Grapes">
+                            <span class="badge bg-secondary position-absolute top-0 start-0 m-2">Fruits</span>
+                    
+                        </div>
+                    
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center">{{product.product_name}}</h5>
+                            <div class="mt-auto">
+                                <p class="text-dark fs-7 fw-bold mb-3 text-center">
+                                    <span style="font-size: 0.8em;">&#x09F3;</span>{{product.product_price}}
+                                </p>
+                                <div class="icon-class pt-2 d-flex justify-content-center justify-content-md-between gap-1">
+                                    <!-- <a href="#"
+                                        class="btn border border-secondary  btn-lg btn-xs-sm position-relative z-1 rounded hover-effect-shop">
+                                        <i class="bi bi-heart text-primary"></i>
+                                    </a>
+                                    <a href="#"
+                                        class="btn border border-secondary btn-lg btn-xs-sm text-primary position-relative z-1 hover-effect-shop">
+                                        <i class="bi bi-bag-plus-fill text-primary"></i>
+                                    </a> -->
+                                    <a href="#" class="btn btn-outline-dark" role="button" aria-label="Add to Cart">
+                                        <i class="bi bi-heart" style="font-size: 1.4rem; color: #33393a;"></i>
+                                    </a>
+                                    <a href="#" class="btn btn-outline-dark" role="button" aria-label="Add to Cart">
+                                        <i class="bi bi-cart-plus-fill" style="font-size: 1.4rem; color: #33393a;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                    <!--  -->
+                  {% endfor %}
+                    <!--  -->
+                    <!-- <div class="card border-secondary h-auto fruite-item position-relative">
+                        <a href="product-detail.html" class="stretched-link"></a>
+                    
+                        <div class="position-relative">
+                            <img src="{% static 'img/fruite-item-5.jpg' %}" class="card-img-top img-fluid zoom-img" alt="Grapes">
+                            <span class="badge bg-secondary position-absolute top-0 start-0 m-2">Fruits</span>
+                        </div>
+                    
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center">Grapes</h5>
+                            <div class="mt-auto">
+                                <p class="text-dark fs-7 fw-bold mb-3 text-center">
+                                    <span style="font-size: 0.8em;">&#x09F3;</span> 4.99 / kg
+                                </p>
+                                <div class="icon-class pt-2 d-flex justify-content-center justify-content-md-between gap-1">
+                                    <a href="#"
+                                        class="btn border border-secondary  btn-lg btn-xs-sm position-relative z-1 rounded hover-effect-shop">
+                                        <i class="bi bi-heart text-primary"></i>
+                                    </a>
+                                    <a href="#"
+                                        class="btn border border-secondary btn-lg btn-xs-sm text-primary position-relative z-1 hover-effect-shop">
+                                        <i class="bi bi-bag-plus-fill text-primary"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+                    
+                    
+
+                </div>
+            </div>
+    </div>
+    <!--Trending product End -->

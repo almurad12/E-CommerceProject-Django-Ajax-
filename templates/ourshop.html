@@ -1,0 +1,68 @@
+{% load static %}
+<!-- Our shop start-->
+    <div class="container-fluid fruite">
+        <div class="container py-4">
+            <div class="tab-class text-center">
+                <div class="row g-4 align-items-center">
+                    <div class="col-6 col-md-4 text-start col-sm-6">
+                        <h1 class="text-color-change">Our Products</h1>
+                    </div>
+                    <div class="col-6 col-md-8 text-end col-sm-6 pb-1">
+                        <a href="{% url 'product_page' %}" class="btn btn-outline-dark text-dark">View All 
+                            <i class="bi bi-arrow-right-circle-fill"></i>
+                        </a>
+                        <!-- <a onclick="window.location.href='{% url 'shop' %}'" style="cursor: pointer;"
+                            class="btn border border-secondary text-primary">
+                            View All Products
+                        </a> -->
+                    </div>
+                </div>
+    
+                <div class="tab-content">
+                    <div id="tab-1" class="tab-pane fade show p-0 active">
+                        <div class="row g-3">
+                            {% for product in products %}
+                            <!-- Product 1 -->
+                            <div class="col-6 col-xl-3">
+                                <div class="card h-auto fruite-item position-relative" style="border: 1px solid #33393a !important ;">
+                                    <a href="product-detail.html" class="stretched-link"></a>
+                                    <div class="position-relative">
+                                        <!-- <img src="{% static 'img/fruite-item-5.jpg' %}"
+                                            class="card-img-top img-fluid zoom-img" alt="Grapes"> -->
+                                         <img src="{{ product.product_image.url }}"
+                                            class="card-img-top img-fluid zoom-img" alt="{{product.product_name}}" style="height: 200px; width: 100%; object-fit: cover;">
+                                        <span class="badge bg-dark position-absolute top-0 start-0 m-2">{{ product.category_name}}</span>
+                                    </div>
+                                    <div class="card-body d-flex flex-column">
+                                        <h5 class="card-title">{{product.product_name}}</h5>
+                                        <div class="mt-auto">
+                                            <p class="text-dark fs-7 fw-bold mb-3 text-center">
+                                                <span style="font-size: 0.8em;">&#x09F3;</span> {{product.product_price}}
+                                            </p>
+                                            <div
+                                                class="icon-class pt-2 d-flex justify-content-center justify-content-md-between gap-1">
+                                                <!-- <a href="#" style="border: 1px solid #33393a !important ;"
+                                                    class="btn border border-secondary btn-lg btn-xs-sm position-relative z-1 rounded hover-effect-shop">
+                                                    <i class="bi bi-heart text-primary"></i>
+                                                </a> -->
+                                                <a href="https://your-url.com" class="btn btn-outline-dark" role="button" aria-label="Add to Cart">
+                                                    <i class="bi bi-heart" style="font-size: 1.4rem; color: #33393a;"></i>
+                                                </a>
+                                                <a href="https://your-url.com" class="btn btn-outline-dark" role="button" aria-label="Add to Cart">
+                                                    <i class="bi bi-cart-plus-fill" style="font-size: 1.4rem; color: #33393a;"></i>
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Repeat more cards as needed -->
+                             {% endfor %}
+    
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Our shop end-->

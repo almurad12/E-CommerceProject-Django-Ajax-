@@ -1,0 +1,63 @@
+{% load static %}
+<div class="container-fluid fruite">
+    <div class="container py-4">
+        <div class="tab-class text-center">
+            <div class="tab-content">
+                <div id="tab-1" class="tab-pane fade show p-0 active">
+                    <div class="row g-3">
+                        {% for product in product %}
+                        <!-- Product 1 -->
+                        <div class="col-6 col-xl-2">
+                            <div class="card border-secondary h-auto fruite-item position-relative">
+                                <a href="product-detail.html" class="stretched-link"></a>
+                                <!-- {% if product.product_image %}
+                                <div class="position-relative">
+                                    <img src="{{ product.product_image.url }}" class="card-img-top img-fluid"
+                                        style="height: 200px; width: 100%; object-fit: cover;" alt="{{ product.product_name }}">
+                                    <span class="badge bg-secondary position-absolute top-0 start-0 m-2">{{product.categories}}</span>
+                                </div>
+                                {% endif %} -->
+                                <div class="position-relative">
+
+                                    <img src="{% static 'img/fruite-item-5.jpg' %}" class="card-img-top img-fluid"
+                                        style="height: 200px; width: 100%; object-fit: cover;" alt="{{ product.product_name }}">
+                                    <!-- <span class="badge bg-dark position-absolute top-0 start-0 m-2">{{product.category_name}}</span> -->
+                                </div>
+                        
+                                <div class="card-body d-flex flex-column">
+                                    <h5 class="card-title text-center" style="font-size: .8em">{{ product.product_name }}</h5>
+                                    <div class="mt-auto">
+                                        <p class="text-dark fs-7 fw-bold mb-3 text-center">
+                                            <span style="font-size: 0.8em;">&#x09F3;</span> {{ product.product_price }}
+                                        </p>
+                                        <!-- <div class="icon-class pt-1 d-flex justify-content-center justify-content-md-between gap-1">
+                                            <a href="https://your-url.com" class="btn btn-outline-dark" role="button" aria-label="Add to Cart">
+                                                <i class="bi bi-heart" style="font-size: 1.4rem; color: #33393a;"></i>
+                                            </a>
+                                            <a href="https://your-url.com" class="btn btn-outline-dark" role="button" aria-label="Add to Cart">
+                                                <i class="bi bi-cart-plus-fill" style="font-size: 1.4rem; color: #33393a;"></i>
+                                            </a>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- Repeat more cards as needed -->
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="pagination d-flex justify-content-end mt-3">
+    <a href="#" class="rounded">&laquo;</a>
+    <a href="#" class="active rounded">1</a>
+    <a href="#" class="rounded">2</a>
+    <a href="#" class="rounded">3</a>
+    <a href="#" class="rounded">4</a>
+    <a href="#" class="rounded">5</a>
+    <a href="#" class="rounded">6</a>
+    <a href="#" class="rounded">&raquo;</a>
+</div>

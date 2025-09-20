@@ -1,0 +1,162 @@
+<!-- add to watchlist alert showing modal -->
+<div class="modal fade" id="addToWatchlistModal" tabindex="-1">
+    <div class="modal-dialog modal-sm modal-dialog-centered"> <!-- small + centered -->
+        <div class="modal-content text-center shadow-lg border-0 rounded-4">
+
+            <div class="modal-body p-4">
+                <!-- Success Icon -->
+                <div class="mb-3">
+                    <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                </div>
+
+                <!-- Title -->
+                <h5 class="fw-bold text-success">Product Added In Watchlist!</h5>
+                <button class="btn btn-success w-100 rounded-pill" data-bs-dismiss="modal">
+                    <i class="bi bi-check2-circle me-1"></i> Okay
+                </button>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- add to watchlist alert showing modal -->
+
+
+
+<script>
+    $(document).ready(function () {
+
+        // ---- Load Wishlist ----
+        function loadWishlist() {
+            $.get("/showcookielist/", function (data) {
+                //  console.log("data is",data.cartitem)
+                // count update
+                // $("#wishlist-count").text(data.count);
+                // 
+                // $("#cartMenuValue").text(Number(data.count) || 10);
+                // clear old items
+                $("#wishlist-items").empty();
+
+                // loop through products
+                data.products.forEach(function (p) {
+                    let card = `
+                        <div class="card mb-3 shadow-sm border-0 rounded-3">
+                            <div class="card-body p-2">
+                                <div class="d-flex align-items-center">
+                                <!-- Product Image -->
+                                <img src="${p.image}"
+                                    class="img-fluid rounded-3 border" 
+                                    alt="${p.name}"
+                                    style="width: 65px; height: 65px; object-fit: cover;">
+
+                                <!-- Product Details -->
+                                <div class="ms-3 flex-grow-1">
+                                    <a href="/shop/${p.id}" class="text-dark text-bold">${p.name}</a>
+                                    <br>
+                                    <small class="text-bold">Price: ${p.price}</small>
+                                </div>
+
+                                <!-- Remove Button -->
+                                <button class="btn btn-sm btn-outline-danger remove-item" data-id="${p.id}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                                </div>
+                            </div>
+                    </div>`
+                    $("#wishlist-items").append(card);
+                });
+            });
+        }
+
+        // ---- যখন offcanvas খোলা হবে তখন লোড করবে ----
+        $('#watchlistSidebar').on('show.bs.offcanvas', function () {
+            loadWishlist();
+        });
+
+        // ---- Remove button handle ----
+        $(document).on("click", ".remove-item", function (e) {
+            e.preventDefault();
+            // let productId = $(this).data("id");
+            let productId = parseInt($(this).data("id")); // ✅ ensure integer
+            console.log("Remove product id:", productId);
+            console.log(typeof productId);
+
+            $.ajax({
+                url: "/wishlist/remove/",
+                type: "GET",
+                data: { product_id: productId },
+                success: function (response) {
+                    console.log("Removed:", response);
+                    loadWishlist(); // refresh after remove
+                },
+                error: function (xhr, status, error) {
+                    console.error("Error removing:", error);
+                }
+            });
+        });
+    });
+    // add wishlist
+    //for add to wishlist
+    function getCookie(name) {
+        let cookieArr = document.cookie.split(";");
+        for (let i = 0; i < cookieArr.length; i++) {
+            let cookiePair = cookieArr[i].split("=");
+            let key = cookiePair[0].trim();
+            if (key === name) {
+                return decodeURIComponent(cookiePair[1]);
+            }
+        }
+        return null;
+    }
+
+    // add to watchlist modal show
+    function showAddToWatchlistModal() {
+        let modal = new bootstrap.Modal(document.getElementById("addToWatchlistModal"));
+        modal.show();
+    }
+
+
+
+    function sendProductId(productId) {
+        console.log(productId);
+
+        // get existing cookie
+        let wishlist = [];
+        try {
+            wishlist = JSON.parse(getCookie("wishlist") || "[]");
+            if (!Array.isArray(wishlist)) {
+                wishlist = []; // reset if not an array
+            }
+        } catch (e) {
+            wishlist = []; // reset if JSON.parse fails
+        }
+
+        // check duplicate before adding
+        if (!wishlist.includes(productId)) {
+            wishlist.push(productId);
+            document.cookie = "wishlist=" + JSON.stringify(wishlist) + "; path=/";
+        }
+        // show bootstrap alert
+
+        // show bootstrap alert
+        $.ajax({
+            url: "/watchlist/",
+            type: "GET",
+            data: { product_id: productId },
+            success: function (response) {
+                console.log("Product saved:", response.product_id);
+                // alert("Product added watchlist!");
+                showAddToWatchlistModal()
+
+                // $("#wishlist-count").text(10);
+                // <div class="alert alert-success" role="alert">
+                //     This is a success alert—check it out!
+                // </div>
+            },
+            error: function (xhr, status, error) {
+                console.error("Error:", error);
+            }
+        });
+    }
+    // add wishlist
+</script>

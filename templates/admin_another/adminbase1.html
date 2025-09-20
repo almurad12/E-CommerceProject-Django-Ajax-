@@ -1,0 +1,447 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>The Art & Craft-CrystaL</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+
+
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- Bootstrap icon -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- htmx -->
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+     <!-- ✅ DataTables CSS -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+</head>
+
+<body>
+
+    <!-- Spinner Start -->
+    <!-- <div id="spinner"
+        class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50  d-flex align-items-center justify-content-center">
+        <div class="spinner-grow text-primary" role="status"></div>
+    </div> -->
+    <!-- Spinner End -->
+    <!-- navbar middleside -->
+    <div class="container-fluid sticky-top bg-white navbar-style">
+        <div class="container px-0">
+            <nav
+                class="navbar custom-navbar d-flex justify-content-between align-items-center navbar-expand py-0 pb-0 position-relative">
+    
+                <!-- Left Icons -->
+                <div class="d-flex gap-2 navbar-icons">
+                    <button class="btn-search btn border btn-md-square rounded-circle" data-bs-toggle="offcanvas"
+                        data-bs-target="#sidebarOffcanvas">
+                        <i class="bi bi-list text-dark" style="font-size: 1.8rem;"></i>
+                    </button>
+                    <!-- <button class="btn-search btn border btn-md-square rounded-circle" data-bs-toggle="modal"
+                        data-bs-target="#searchModal">
+                        <i class="fas fa-search text-dark"></i>
+                    </button> -->
+                </div>
+    
+                <!-- Center Logo (Positioned Absolutely Center) -->
+                <a href="index.html" class="navbar-brand position-absolute top-50 start-50 translate-middle text-center">
+                    <h6 class="fw-bold mb-0" style="line-height: 1;">
+                        Art &<br />
+                        <small>Craft-CrystaL</small>
+                    </h6>
+                </a>
+    
+                <!-- Right Icons -->
+                <div class="d-flex gap-2 navbar-icons">
+    
+                    <!-- Cart -->
+                    <a href="#" class="position-relative my-auto">
+                        <i class="bi bi-cart-plus-fill" style="font-size: 1.7rem; color: #45595b !important;"
+                            data-bs-toggle="offcanvas" data-bs-target="#addToCartSidebar"
+                            aria-controls="offcanvasRight"></i>
+                        <span
+                            class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                            style="top: -1px; left: 16px; height: 16px; min-width: 16px; font-size: 11px;">3</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+    <!-- navbar middleside -->
+    <!-- navbar Modal Search Start -->
+    <div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-fullscreen">
+            <div class="modal-content rounded-0">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Search by keyword</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body d-flex align-items-center">
+                    <div class="input-group w-75 mx-auto d-flex">
+                        <input type="search" class="form-control p-3" placeholder="keywords"
+                            aria-describedby="search-icon-1">
+                        <span id="search-icon-1" class="input-group-text p-3"><i class="fa fa-search"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- navbar Modal Search End -->
+    <!-- navbar humburger Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start  text-white" tabindex="-1" id="sidebarOffcanvas" style="width: 180px;">
+        <div class="offcanvas-header">
+            <!-- <h5 class="offcanvas-title">Sidebar</h5> -->
+            <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column">
+                <li class="nav-item border-bottom border-dark">
+                    <a class="nav-link text-dark" href="#"><i class="bi bi-house-check-fill "></i> Home</a>
+                </li>
+                <!-- <li class="nav-item border-bottom border-dark">
+                    <a class="nav-link text-dark" href="#"><i class="bi bi-bag-plus-fill "></i> Shop</a>
+                </li> -->
+                <li class="nav-item border-bottom border-dark">
+                    <a class="nav-link text-dark" href="#"
+>
+                        <i class="bi bi-bag-plus-fill"></i> Category
+                    </a>
+                </li>
+                 <li class="nav-item border-bottom border-dark">
+                    <a class="nav-link text-dark" href="#"><i class="bi bi-info-circle-fill"></i>About us</a>
+                </li>
+                <li class="nav-item border-bottom border-dark">
+                    <a class="nav-link text-dark" href="#"><i class="bi bi-person-lines-fill"></i> Contact us</a>
+                </li>
+                 <!-- <li class="nav-item border-bottom ">
+                    <a class="nav-link text-dark" href="#"><i class="bi bi-unlock2"></i> Privacy policy</a>
+                </li> -->
+            </ul>
+        </div>
+    </div>
+    <!-- navbar humburger Offcanvas Sidebar -->
+    <!-- navbar add to cart -->
+    <div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="addToCartSidebar" style="width: 265px; height: 90%;">
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title">Shopping Cart</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                </div>
+            
+                <div class="offcanvas-body">
+                    <div class="mb-3" data-bs-dismiss="offcanvas">
+                        <a href="#" class="text-decoration-none text-body">
+                            <i class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping
+                        </a>
+                    </div>
+                    <hr>
+            
+                    <div class="mb-4">
+                        <p class="mb-1 fw-bold">Shopping cart</p>
+                        <p class="mb-0 text-muted">You have 4 items in your cart</p>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                    class="img-fluid rounded-3" alt="item" style="width: 65px;">
+                                <div class="ms-3 flex-grow-1">
+                                    <p class="mb-1 fw-bold">iPhone 11 Pro</p>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-plus-circle"></i>
+                                        <span>2</span>
+                                        <i class="bi bi-dash-circle"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Price: $900</p>
+                                </div>
+                                <a href="#" class="text-danger"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                    class="img-fluid rounded-3" alt="item" style="width: 65px;">
+                                <div class="ms-3 flex-grow-1">
+                                    <p class="mb-1 fw-bold">iPhone 11 Pro</p>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-plus-circle"></i>
+                                        <span>2</span>
+                                        <i class="bi bi-dash-circle"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Price: $900</p>
+                                </div>
+                                <a href="#" class="text-danger"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                    class="img-fluid rounded-3" alt="item" style="width: 65px;">
+                                <div class="ms-3 flex-grow-1">
+                                    <p class="mb-1 fw-bold">iPhone 11 Pro</p>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-plus-circle"></i>
+                                        <span>2</span>
+                                        <i class="bi bi-dash-circle"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Price: $900</p>
+                                </div>
+                                <a href="#" class="text-danger"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                                    class="img-fluid rounded-3" alt="item" style="width: 65px;">
+                                <div class="ms-3 flex-grow-1">
+                                    <p class="mb-1 fw-bold">iPhone 11 Pro</p>
+                                    <div class="d-flex align-items-center gap-2">
+                                        <i class="bi bi-plus-circle"></i>
+                                        <span>2</span>
+                                        <i class="bi bi-dash-circle"></i>
+                                    </div>
+                                    <p class="mb-0 text-muted">Price: $900</p>
+                                </div>
+                                <a href="#" class="text-danger"><i class="fas fa-trash-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-2">Subtotal</p>
+                        <p class="mb-2">$4798.00</p>
+                    </div>
+                    <div class="d-flex justify-content-between">
+                        <p class="mb-2">Shipping</p>
+                        <p class="mb-2">$20.00</p>
+                    </div>
+                    <div class="d-flex justify-content-between mb-4">
+                        <p class="mb-2">Total (Incl. taxes)</p>
+                        <p class="mb-2">$4818.00</p>
+                    </div>
+                   
+                </div>
+            
+    </div>
+    <!-- </div> -->
+    <!-- add to cart section end-->
+    <!-- </div> -->
+    <!-- navbar end -->
+    <!-- {% block content %}
+
+    {% endblock %} -->
+    <div class="container my-5">
+    <h2 class="mb-4">Categories</h2>
+
+    <!-- Add Category Button -->
+    <button class="btn btn-dark mb-3" data-bs-toggle="modal" data-bs-target="#addCategoryModal">
+        <i class="bi bi-plus-lg me-1"></i> Add Category
+    </button>
+
+    <!-- Category Table -->
+    <div class="table-responsive">
+        <table id="categoryTable" class="table table-bordered align-middle text-center">
+            <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Categories injected by JS -->
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Category Modal -->
+<div class="modal fade" id="addCategoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="addCategoryForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Add Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="categoryName" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-primary">Add Category</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Update Category Modal -->
+<div class="modal fade" id="updateCategoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="updateCategoryForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Update Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            <input type="hidden" id="updateCategoryId">
+            <div class="mb-3">
+                <label class="form-label">Name</label>
+                <input type="text" class="form-control" id="updateCategoryName" required>
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Update Category</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Category Modal -->
+<div class="modal fade" id="deleteCategoryModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <form id="deleteCategoryForm">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Delete Category</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+            Are you sure you want to delete this category?
+            <input type="hidden" id="deleteCategoryId">
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-danger">Delete</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+        <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+     <!-- ✅ DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+
+    <!-- ✅ DataTables Init -->
+    <script>
+        $(document).ready(function () {
+            // If any table has id="categoryTable", it will be initialized
+            $('#categoryTable').DataTable();
+        });
+    </script>
+    
+<script>
+$(document).ready(function() {
+
+    // Dummy category data
+    let categories = [
+        {id: 1, name: 'Electronics'},
+        {id: 2, name: 'Clothing'},
+        {id: 3, name: 'Books'}
+    ];
+
+    let categoryTable = $('#categoryTable').DataTable({
+        responsive: true,
+        autoWidth: false
+    });
+
+    // Function to render table
+    function renderTable() {
+        categoryTable.clear();
+        categories.forEach(cat => {
+            categoryTable.row.add([
+                cat.id,
+                cat.name,
+                `<button class="btn btn-sm btn-success me-1" onclick="editCategory(${cat.id})">Edit</button>
+                 <button class="btn btn-sm btn-danger" onclick="confirmDeleteCategory(${cat.id})">Delete</button>`
+            ]);
+        });
+        categoryTable.draw();
+    }
+
+    renderTable();
+
+    // Add Category
+    $('#addCategoryForm').submit(function(e) {
+        e.preventDefault();
+        let name = $('#categoryName').val();
+        let newId = categories.length ? categories[categories.length-1].id + 1 : 1;
+        categories.push({id: newId, name: name});
+        $('#addCategoryModal').modal('hide');
+        $('#addCategoryForm')[0].reset();
+        renderTable();
+    });
+
+    // Edit Category
+    window.editCategory = function(id) {
+        let cat = categories.find(c => c.id === id);
+        $('#updateCategoryId').val(cat.id);
+        $('#updateCategoryName').val(cat.name);
+        $('#updateCategoryModal').modal('show');
+    }
+
+    $('#updateCategoryForm').submit(function(e) {
+        e.preventDefault();
+        let id = parseInt($('#updateCategoryId').val());
+        let cat = categories.find(c => c.id === id);
+        cat.name = $('#updateCategoryName').val();
+        $('#updateCategoryModal').modal('hide');
+        renderTable();
+    });
+
+    // Delete Category
+    window.confirmDeleteCategory = function(id) {
+        $('#deleteCategoryId').val(id);
+        $('#deleteCategoryModal').modal('show');
+    }
+
+    $('#deleteCategoryForm').submit(function(e) {
+        e.preventDefault();
+        let id = parseInt($('#deleteCategoryId').val());
+        categories = categories.filter(c => c.id !== id);
+        $('#deleteCategoryModal').modal('hide');
+        renderTable();
+    });
+
+});
+</script>
+
+    
+</body>
+
+</html>

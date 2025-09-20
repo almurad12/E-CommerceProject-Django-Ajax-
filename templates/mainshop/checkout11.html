@@ -1,0 +1,151 @@
+{% extends 'mainshop/base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    <h2 class="mb-4">Checkout</h2>
+
+    <div class="row">
+
+
+        <!-- Order Summary -->
+        <div class="col-md-7">
+            <!-- <h4 class="mb-3">Your Order</h4> -->
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col" colspan="1">Product</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Example Row 1 -->
+                        <tr>
+                            <td class="d-flex flex-column align-items-center gap-1" colspan="1">
+                                <img src="https://cdn-icons-png.flaticon.com/512/147/147144.png" alt="Product"
+                                    class="img-fluid rounded" style="width:60px; height:60px; object-fit:cover;">
+                                <span class="text-truncate" style="max-width:200px;">Canon EOS M50 Mirrorless
+                                    Camera</span>
+                                <span class="badge bg-primary">Variant: Red Red Red</span>
+                                <span class="badge bg-dark">Quantity: 20</span>
+                                <span class="badge bg-primary">Qty × Price = 20 × 50,000</span>
+                                <span class="badge bg-dark">Total: 150,000</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm rounded-circle">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="d-flex flex-column align-items-center gap-1" colspan="1">
+                                <img src="https://cdn-icons-png.flaticon.com/512/147/147144.png" alt="Product"
+                                    class="img-fluid rounded" style="width:60px; height:60px; object-fit:cover;">
+                                <span class="text-truncate" style="max-width:200px;">Canon EOS M50 Mirrorless
+                                    Camera</span>
+                                <span class="badge bg-primary">Variant: Red Red Red</span>
+                                <span class="badge bg-dark">Quantity: 20</span>
+                                <span class="badge bg-primary">Qty × Price = 20 × 50,000</span>
+                                <span class="badge bg-dark">Total: 150,000</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm rounded-circle">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="d-flex flex-column align-items-center gap-1" colspan="1">
+                                <img src="https://cdn-icons-png.flaticon.com/512/147/147144.png" alt="Product"
+                                    class="img-fluid rounded" style="width:60px; height:60px; object-fit:cover;">
+                                <span class="text-truncate" style="max-width:200px;">Canon EOS M50 Mirrorless
+                                    Camera</span>
+                                <span class="badge bg-primary">Variant: Red Red Red</span>
+                                <span class="badge bg-dark">Quantity: 20</span>
+                                <span class="badge bg-primary">Qty × Price = 20 × 50,000</span>
+                                <span class="badge bg-dark">Total: 150,000</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm rounded-circle">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="d-flex flex-column align-items-center gap-1" colspan="1">
+                                <img src="https://cdn-icons-png.flaticon.com/512/147/147144.png" alt="Product"
+                                    class="img-fluid rounded" style="width:60px; height:60px; object-fit:cover;">
+                                <span class="text-truncate" style="max-width:200px;">Canon EOS M50 Mirrorless
+                                    Camera</span>
+                                <span class="badge bg-primary">Variant: Red Red Red</span>
+                                <span class="badge bg-dark">Quantity: 20</span>
+                                <span class="badge bg-primary">Qty × Price = 20 × 50,000</span>
+                                <span class="badge bg-dark">Total: 150,000</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm rounded-circle">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                        <!-- Example Row 2 -->
+                    </tbody>
+                    <tfoot class="table-light">
+                         <tr>
+                            <th colspan="1" class="text-start">Product Price</th>
+                            <th class="text-success fw-bold text-end">৳130000</th>
+                        </tr>
+                        <tr>
+                            <th colspan="1" class="text-start">Delivery Charge</th>
+                            <th class="text-success fw-bold text-end">৳130</th>
+                        </tr>
+                        <tr>
+                            <th colspan="1" class="text-start">Grand Total</th>
+                            <th class="text-success fw-bold text-end">৳150,000</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+        </div>
+
+
+
+        <!-- Billing Info -->
+        <div class="col-md-5 mt-2">
+            <h4 class="mb-3">Billing Address</h4>
+            <form>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="firstName" placeholder="" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="email" class="form-label">Phone Number</label>
+                        <input type="number" class="form-control" id="phonenumber" placeholder="Your Phone Number">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="country" class="form-label">District</label>
+                        <input type="text" class="form-control" id="District" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="country" class="form-label">Thana</label>
+                        <input type="text" class="form-control" id="" required>
+                    </div>
+                </div>
+                <button class="btn btn-dark btn-lg w-100" type="submit">
+                    <i class="bi bi-credit-card-2-front-fill me-1"></i> Pay Now
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

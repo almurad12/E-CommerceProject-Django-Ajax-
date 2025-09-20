@@ -1,0 +1,48 @@
+ {% load static %}
+<div class="col-md-12 col-lg-12">
+    <div id="carouselId" class="carousel slide position-relative" data-bs-ride="carousel">
+        
+        <!-- Carousel indicators -->
+        <div class="carousel-indicators mb-0">
+            {% for slide in slides %}
+                <input type="radio" 
+                       data-bs-target="#carouselId" 
+                       data-bs-slide-to="{{ forloop.counter0 }}" 
+                       class="{% if forloop.first %}active{% endif %}" 
+                       {% if forloop.first %}aria-current="true"{% endif %}
+                       aria-label="Slide {{ forloop.counter }}">
+            {% endfor %}
+        </div>
+
+        <!-- Carousel inner -->
+        <div class="carousel-inner" role="listbox">
+            {% for slide in slides %}
+                <div class="carousel-item rounded {% if forloop.first %}active{% endif %}">
+                    <img src="{{ slide.image.url }}" class="img-fluid bg-secondary" alt="Slide {{ forloop.counter }}">
+                </div>
+            {% endfor %}
+        </div>
+        
+    </div>
+</div>
+
+
+<!-- Optional: Add some styling to make radio inputs look like buttons -->
+<style>
+    .carousel-indicators [type="radio"] {
+        appearance: none;
+        width: 12px;
+        height: 12px;
+        margin: 5px;
+        border-radius: 50%;
+        background-color: #ccc;
+        cursor: pointer;
+        border: none;
+        transition: background-color 0.3s;
+    }
+
+    .carousel-indicators [type="radio"].active,
+    .carousel-indicators [type="radio"]:checked {
+        background-color: #000;
+    }
+</style>

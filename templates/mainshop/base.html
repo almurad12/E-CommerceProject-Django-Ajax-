@@ -1,0 +1,500 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>The Art & Craft-CrystaL</title>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <meta content="" name="keywords">
+    <meta content="" name="description">
+
+    <!-- Google Web Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&family=Raleway:wght@600;800&display=swap"
+        rel="stylesheet">
+
+    <!-- Icon Font Stylesheet -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.4/css/all.css" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.1/font/bootstrap-icons.css" rel="stylesheet">
+
+    <!-- Libraries Stylesheet -->
+    <!-- <link href="lib/lightbox/css/lightbox.min.css" rel="stylesheet"> -->
+    <link href="{% static 'lib/lightbox/css/lightbox.min.css' %}" rel="stylesheet">
+    <!-- <link href="lib/owlcarousel/assets/owl.carousel.min.css" rel="stylesheet"> -->
+    <link href="{% static 'lib/owlcarousel/assets/owl.carousel.min.css' %}" rel="stylesheet">
+
+
+    <!-- Customized Bootstrap Stylesheet -->
+    <!-- <link href="css/bootstrap.min.css" rel="stylesheet"> -->
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <!-- Template Stylesheet -->
+    <!-- <link href="css/style.css" rel="stylesheet"> -->
+    <link href="{% static 'css/style.css' %}" rel="stylesheet">
+
+    <!-- Bootstrap icon -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- htmx -->
+    <script src="https://unpkg.com/htmx.org@1.9.2"></script>
+
+</head>
+
+<body>
+
+    <!-- Spinner Start -->
+    <div id="spinner"
+        class="show w-100 vh-100 bg-white position-fixed translate-middle top-50 start-50 d-flex flex-column align-items-center justify-content-center">
+
+        <!-- Spinner with text inside -->
+        <div style="position: relative; width: 8rem; height: 8rem;" class="mb-3">
+            <div class="spinner-border text-dark" role="status" style="width: 100%; height: 100%;">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <!-- Centered text inside spinner -->
+            <div style="
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          text-align: center;
+          font-weight: bold;
+          font-size: 13px;
+          line-height: 1.2;
+          white-space: nowrap;
+          font-size:medium;
+        " class="text-bold fw-bold">
+                Art &<br>
+                <small>Craft-CrystaL</small>
+            </div>
+        </div>
+    </div>
+    <!-- Spinner End -->
+    <!-- navbar start -->
+    <!-- navbar upperside -->
+    <style>
+        .odd-color {
+            background-color: #ac88e7;
+            font-size: .8em;
+            font-weight: bolder;
+        }
+
+        .even-color {
+            background-color: #c5aded;
+            font-size: .8em;
+            font-weight: bolder;
+        }
+    </style>
+    <div class="owl-carousel owl-navbar-carosel">
+        {% for main_cat in categories_with_sub %}
+        <div
+            class="item d-flex justify-content-center p-2 {% if forloop.counter|divisibleby:2 %}even-color{% else %}odd-color{% endif %}">
+            <a href="/shop/?category={{ main_cat.category.id }}" class="text-white">
+                {{ main_cat.category.name }}
+                <i class="bi bi-arrow-right" style="font-size: 0.7em;"></i>
+            </a>
+        </div>
+        {% endfor %}
+    </div>
+    <!-- navbar upperside end -->
+
+    <!-- navbar middleside -->
+    <div class="container-fluid sticky-top bg-white navbar-style">
+        <div class="container px-0">
+            <nav
+                class="navbar custom-navbar d-flex justify-content-between align-items-center navbar-expand py-0 pb-0 position-relative">
+                <!-- Left Icons -->
+                <div class="d-flex gap-2 navbar-icons">
+                    <button class="btn-search btn border btn-md-square rounded-circle" data-bs-toggle="offcanvas"
+                        data-bs-target="#sidebarOffcanvas">
+                        <i class="bi bi-list text-dark" style="font-size: 1.8rem;"></i>
+                    </button>
+                    <button class="btn-search btn border btn-md-square rounded-circle" data-bs-toggle="offcanvas"
+                        data-bs-target="#searchSidebar">
+                        <i class="fas fa-search text-dark"></i>
+                    </button>
+                </div>
+                <!-- Center Logo (Positioned Absolutely Center) -->
+                <a href="index.html"
+                    class="navbar-brand position-absolute top-50 start-50 translate-middle text-center">
+                    <h6 class="fw-bold mb-0" style="line-height: 1;">
+                        Art &<br />
+                        <small>Craft-CrystaL</small>
+                    </h6>
+                </a>
+                <!-- Right Icons -->
+                <div class="d-flex gap-2 navbar-icons" id="navbarRightIcon">
+                    <!-- Wishlist -->
+                    <a href="#" class="position-relative my-auto">
+                        <i class="bi bi-heart" style="font-size: 1.7rem; color: #45595b !important;"
+                            data-bs-toggle="offcanvas" data-bs-target="#watchlistSidebar"
+                            aria-controls="offcanvasRight"></i>
+                        <!-- <span id="cartMenuValue"
+                            class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
+                            style="top: -1px; left: 16px; height: 16px; min-width: 16px; font-size: 11px;">
+                        </span> -->
+                    </a>
+                    <!-- Cart -->
+                    <a href="#" class="position-relative my-auto">
+                        <i class="bi bi-cart-plus-fill" style="font-size: 1.7rem; color: #45595b !important;"
+                            data-bs-toggle="offcanvas" data-bs-target="#addToCartSidebar"
+                            aria-controls="offcanvasRight"></i>
+                        <span id="cartValue"
+                            class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1 "
+                            style="top: -1px; left: 16px; height: 16px; min-width: 16px; font-size: 11px;">0</span>
+                    </a>
+                </div>
+            </nav>
+        </div>
+    </div>
+
+    <!--  -->
+    <!-- navbar middleside -->
+    <!-- navbar end start -->
+    <!-- navbar Modal Search Start -->
+    <div class="offcanvas offcanvas-start text-dark" tabindex="-1" id="searchSidebar"
+        style="width: 265px; height: 90%;">
+
+        <div class="offcanvas-body">
+            <!-- Content goes here -->
+            <!-- <form class="d-flex">
+                <div style="display: flex;">
+                    <input class="form-control me-0" type="search" placeholder="Search" aria-label="Search"
+                        style="border-radius: 0; margin-right: 0;">
+                    <button class="btn btn-dark" type="submit" style="border-radius: 0;">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form> -->
+            <form class="d-flex">
+                <div style="display: flex;">
+                    <input id="searchInput" class="form-control me-0" type="search" placeholder="Search"
+                        aria-label="Search" style="border-radius: 0; margin-right: 0;">
+                    <button class="btn btn-dark" type="submit" style="border-radius: 0;">
+                        <i class="bi bi-search"></i>
+                    </button>
+                </div>
+            </form>
+            <!-- <div class="div">
+                <p>show the result</p>
+            </div> -->
+           
+            <div id="searchResults" class="mt-3"></div>
+            <!-- <div class="row g-0 align-items-center">
+                <div class="col-auto">
+                    <img src="https://images.pexels.com/photos/18511613/pexels-photo-18511613/free-photo-of-gel-pens.png"
+                        class="img-fluid rounded" alt="Gel Pens" style="width: 20px;">
+                </div>
+                <div class="col">
+                    <div class="card-body py-0">
+                        <h6 class="card-title mb-1 fw-bold" style="font-size: .8em;">Candy-colored Click Gel Pens (Black
+                            ink)</h6>
+                        <p class="card-text mb-0 fw-bold">৳30</p>
+                    </div>
+                </div>
+            </div> -->
+        </div>
+    </div>
+    </div>
+    <!-- script for search -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+
+        $(document).ready(function () {
+            $('#searchInput').on('input', function () {
+                const query = $(this).val().trim();
+
+                if (query.length === 0) {
+                    $('#searchResults').empty();  // Clear results if input is empty
+                    return;
+                }
+
+                $.ajax({
+                    url: '/search-products/',
+                    type: 'GET',
+                    data: { search: query },
+                    success: function (data) {
+                        if (data.length === 0) {
+                            $('#searchResults').html('<p class="text-muted">No products found.</p>');
+                            return;
+                        }
+
+                        let html = '';
+                        data.forEach(product => {
+                            html += `
+            <div class="row g-0 align-items-center mb-2">
+              <div class="col-auto">
+                <img src="${product.coverphoto}" class="img-fluid rounded" 
+                     style="width: 40px; height: 40px; object-fit: cover;" alt="${product.name}">
+              </div>
+              <div class="col ps-2">
+                <div class="card-body py-0">
+                    <a href="/shop/${product.id}" class="card-title mb-1 fw-bold text-dark" style="font-size: .7em; "> ${product.name} </a>
+                  <p class="card-text mb-0 fw-bold">৳${product.afterdiscountprice}</p>
+                </div>
+              </div>
+            </div>`;
+                        });
+
+                        $('#searchResults').html(html);
+                    },
+                    error: function () {
+                        $('#searchResults').html('<p class="text-danger">Error loading results.</p>');
+                    }
+                });
+            });
+        });
+    </script>
+    <!-- script for search -->
+    <!-- navbar Modal Search End -->
+    <!-- navbar humburger Offcanvas Sidebar -->
+    <div class="offcanvas offcanvas-start  text-white" tabindex="-1" id="sidebarOffcanvas" style="width: 220px;">
+        <div class="offcanvas-header" style="background-color: black;">
+            <h5 class="offcanvas-title text-white" style="font-size: 1em;">Art & Craft-CrystaL</h5>
+            <!-- <h6 class="text-center">Art & Craft-CrystaL
+            </h6> -->
+            <!-- <h5 class="offcanvas-title">Sidebar</h5> -->
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas"></button>
+        </div>
+        <div class="offcanvas-body">
+            <ul class="nav flex-column">
+                <li class="nav-item border-bottom border-dark">
+                    <a class="nav-link text-dark" href="{% url 'home' %}">
+                        <i class="bi bi-house-check-fill"></i> Home
+                    </a>
+                </li>
+
+                <li class="nav-item border-bottom border-dark">
+                    <a class="nav-link text-dark" href="{% url 'shop-list' %}">
+                        <i class="bi bi-bag-plus-fill"></i> Shop
+                    </a>
+                </li>
+                {% for cat_data in categories_with_sub %}
+                <li class="nav-item border-bottom border-dark">
+                    <a class="nav-link text-dark d-flex justify-content-between text-bold" data-bs-toggle="collapse"
+                        href="#cat{{ cat_data.category.id }}" role="button" aria-expanded="false"
+                        aria-controls="cat{{ cat_data.category.id }}">
+                        {{ cat_data.category.name }} <i class="bi bi-plus-lg" style="font-size: 1em;"></i>
+                    </a>
+                    <div class="collapse ps-3" id="cat{{ cat_data.category.id }}">
+                        <ul class="nav flex-column">
+                            {% for sub_cat in cat_data.subcategories %}
+                            <li class="nav-item">
+                                <a class="nav-link text-muted" href="/shop/?subcategory={{sub_cat.id}}">{{ sub_cat.name }}</a>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </li>
+                {% endfor %}
+
+                <!-- Collapsible Menu Item 2 -->
+                <!-- <li class="nav-item border-bottom border-dark">
+            <a class="nav-link text-dark" data-bs-toggle="collapse" href="#submenu2" role="button" aria-expanded="false" aria-controls="submenu2">
+                Clothing
+            </a>
+            <div class="collapse ps-3" id="submenu2">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link text-muted" href="#">Men</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-muted" href="#">Women</a>
+                    </li>
+                </ul>
+            </div>
+        </li> -->
+            </ul>
+        </div>
+        <div class="offcanvas-footer p-2" style="background-color: black;">
+            <div class="d-flex flex-row justify-content-center gap-3">
+                <a href="#" class="text-white footer-icon-hover"><i class="bi bi-facebook"
+                        style="font-size: 1.3em;"></i></a>
+                <a href="#" class="text-white footer-icon-hover"><i class="bi bi-instagram"
+                        style="font-size: 1.3em;"></i></a>
+                <a href="#" class="text-white footer-icon-hover"><i class="bi bi-pinterest"
+                        style="font-size: 1.3em;"></i></a>
+                <a href="#" class="text-white footer-icon-hover"><i class="bi bi-youtube"
+                        style="font-size: 1.3em;"></i></a>
+                <a href="#" class="text-white footer-icon-hover"><i class="bi bi-whatsapp"
+                        style="font-size: 1.3em;"></i></a>
+            </div>
+        </div>
+    </div>
+    <!-- navbar humburger Offcanvas Sidebar -->
+    <!-- navbar add to cart -->
+    {% include 'mainshop/cart.html' %}
+    <!-- add to cart section end-->
+    <!-- modal watchlist -->
+    <!-- <div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="watchlistSidebar"
+        style="width: 265px; height: 90%;">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Watchlist Cart</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+
+        <div class="offcanvas-body">
+            <div class="mb-3" data-bs-dismiss="offcanvas">
+                <a href="#" class="text-decoration-none text-body">
+                    <i class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping
+                </a>
+            </div>
+            <hr>
+
+            <div class="mb-4">
+                <p class="mb-1 fw-bold">Watchlist</p>
+                <p class="mb-0 text-muted">You have 4 items in your cart</p>
+            </div>
+           
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                            class="img-fluid rounded-3" alt="item" style="width: 65px;">
+                        <div class="ms-3 flex-grow-1">
+                            <p class="mb-1 fw-bold">iPhone 11 Pro</p>
+                            <p class="mb-0 text-muted">Price: $900</p>
+                        </div>
+                        <a href="#" class="text-danger"><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <div class="d-flex align-items-center">
+                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-shopping-carts/img1.webp"
+                            class="img-fluid rounded-3" alt="item" style="width: 65px;">
+                        <div class="ms-3 flex-grow-1">
+                            <p class="mb-1 fw-bold">iPhone 11 Pro</p>
+                            <p class="mb-0 text-muted">Price: $900</p>
+                        </div>
+                        <a href="#" class="text-danger"><i class="fas fa-trash-alt"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div> -->
+    <!-- </div> -->
+    <!-- model watchlist -->
+
+    <!-- ajax watchlist -->
+    <!-- ajax watchlist -->
+    <div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="watchlistSidebar"
+        style="width: 265px; height: 90%;">
+        <div class="offcanvas-header">
+            <h5 class="offcanvas-title">Watchlist Cart</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+        </div>
+
+        <div class="offcanvas-body">
+            <div class="mb-3" data-bs-dismiss="offcanvas">
+                <a href="#" class="text-decoration-none text-body">
+                    <i class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping
+                </a>
+            </div>
+            <hr>
+
+            <!-- <div class="mb-4">
+                <p class="mb-1 fw-bold">Watchlist</p>
+                <p class="mb-0 text-muted">Watchlist Item</p>
+            </div> -->
+
+            <!-- Dynamic product list -->
+            <div id="wishlist-items"></div>
+        </div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- <script>
+        $(document).ready(function () {
+            function loadWishlist() {
+                $.get("/showcookielist/", function (data) {
+                    // count update
+                    $("#wishlist-count").text(data.count);
+
+                    // clear old items
+                    $("#wishlist-items").empty();
+
+                    // loop through products
+                    data.products.forEach(function (p) {
+                        let card = `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex align-items-center">
+                                <img src="${p.image}" 
+                                    class="img-fluid rounded-3" alt="${p.name}" style="width: 65px;">
+                                <div class="ms-3 flex-grow-1">
+                                    <p class="mb-1 fw-bold">${p.name}</p>
+                                    <p class="mb-0 text-muted">Price: $${p.price}</p>
+                                </div>
+                                <a href="#" class="text-danger remove-item" data-id="${p.id}">
+                                    <i class="fas fa-trash-alt"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>`;
+                        $("#wishlist-items").append(card);
+                    });
+                });
+            }
+
+            // যখন offcanvas খোলা হবে তখন লোড করবে
+            $('#watchlistSidebar').on('show.bs.offcanvas', function () {
+                loadWishlist();
+            });
+
+            // Remove button handle
+            $(document).on("click", ".remove-item", function (e) {
+                e.preventDefault();
+                let productId = $(this).data("id");
+                console.log("Remove product id:", productId);
+                // এখানে AJAX দিয়ে remove করতে পারবে (cookie/session update করে)
+                // তারপর loadWishlist() আবার call করো
+            });
+        });
+    </script> -->
+
+    {% include 'mainshop/watchlist.html' %}
+
+
+    <!-- navbar end -->
+    {% block content %}
+    <div id="main-content">
+        {% include 'shop1/slider.html' %}
+    </div>
+    {% endblock %}
+    {% include 'shop1/whychooseus.html' %}
+    <!-- Back to Top -->
+    <!-- <a href="#" class="btn btn-primary border-3 border-primary rounded-circle bg-dark back-to-top">
+        <i class="fa fa-arrow-up text-white "></i></a> -->
+    <a href="#" class="btn btn-primary border-dark rounded-circle bg-dark back-to-top"
+        style="width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
+        <i class="fa fa-arrow-up text-white" style="margin-right:0 !important;"></i>
+    </a>
+
+
+    <!-- JavaScript Libraries -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- <script src="lib/easing/easing.min.js"></script>
+        <script src="lib/waypoints/waypoints.min.js"></script>
+        <script src="lib/lightbox/js/lightbox.min.js"></script>
+        <script src="lib/owlcarousel/owl.carousel.min.js"></script> -->
+    <script src="{% static 'lib/easing/easing.min.js' %}"></script>
+    <script src="{% static 'lib/waypoints/waypoints.min.js' %}"></script>
+    <script src="{% static 'lib/lightbox/js/lightbox.min.js' %}"></script>
+    <script src="{% static 'lib/owlcarousel/owl.carousel.min.js' %}"></script>
+
+    <!-- Template Javascript -->
+    <!-- <script src="{% static 'js/main.js' %}></script> -->
+    <script src="{% static 'js/main.js' %}"></script>
+    <!-- cutomize js -->
+    <!-- <script src="{% static 'js/customizemain.js' %}"></script> -->
+
+</body>
+
+</html>

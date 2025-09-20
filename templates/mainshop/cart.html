@@ -1,0 +1,150 @@
+<!-- Cart Sidebar -->
+<div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="addToCartSidebar" style="width: 300px; height: 90%;">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Shopping Cart (<span id="cart-count">0</span>)</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+        <div class="mb-3" data-bs-dismiss="offcanvas">
+            <a href="#" class="text-decoration-none text-body">
+                <i class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping
+            </a>
+        </div>
+        <hr>
+
+        <!-- Cart items will be injected here -->
+        <div id="cart-container"></div> 
+
+        <!-- Place Order Button -->
+        <!-- <a href="{% url 'checkout' %}"
+           id="placeOrderBtn"
+           class="btn btn-dark btn-md text-white btn-block d-flex justify-content-center mt-3"
+           style="display: none;">Place Order
+        </a> -->
+    </div>
+</div>
+
+<script>
+function loadCart() {
+    $.ajax({
+        url: "/cart/show/",
+        type: "GET",
+        success: function (response) {
+            let cart = response.cart;
+            let html = "";
+
+            // Update cart item count badge
+            $("#cart-count").text(cart.items.length);
+            // update cart value
+            $("#cartValue").text(cart.items.length)
+
+
+            if (!cart.items || cart.items.length === 0) {
+                // Show empty message
+                html = `
+                    <div class="alert alert-warning text-center">
+                        🛒 Your cart is empty
+                    </div>
+                `;
+                // Hide Place Order button
+                $("#placeOrderBtn").hide();
+            } else {
+                // Show products
+                cart.items.forEach(item => {
+                    html += `
+                    <div class="card mb-3 shadow-sm border-0 rounded-3">
+                        <div class="card-body p-2">
+                            <div class="d-flex align-items-center">
+                                <!-- Product Image -->
+                                <img src="${item.image_url}" 
+                                     class="img-fluid rounded-3 border" 
+                                     alt="${item.product_name}" 
+                                     style="width: 65px; height: 65px; object-fit: cover;">
+                    
+                                <!-- Product Details -->
+                                <div class="ms-3 flex-grow-1">
+                                    <a href="/shop/${item.product_id}" 
+                                       class="text-dark fw-bold text-decoration-none"
+                                       onmouseover="this.style.textDecoration='underline'" 
+                                       onmouseout="this.style.textDecoration='none'">
+                                        ${item.product_name}
+                                    </a>
+                                    <br>
+                                    <small class="fw-bold">
+                                        <span class="badge bg-primary">Variant: ${item.variant}</span>
+                                    </small>
+                                    <br>
+                                    <small class="text-bold">Quantity: ${item.quantity}</small>
+                                    <br>
+                                    <small class="text-bold">Price: ৳${item.price}</small>
+                                    <br>
+                                    <small class="fw-bold text-success">Total: ৳${item.product_total}</small>
+                                </div>
+                    
+                                <!-- Remove Button -->
+                                <button class="btn btn-sm btn-outline-danger"
+                                    onclick="removeItem(${item.product_id}, ${item.image_id})">
+                                    <i class="fas fa-trash-alt"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>`;
+                });
+
+                // Add totals
+                html += `
+                    <div class="alert alert-info mt-3">
+                        Subtotal: ৳${cart.total.subtotal} <br>
+                        Delivery: ৳${cart.total.delivery_charge} <br>
+                        <b>Grand Total: ৳${cart.total.grand_total}</b>
+                    </div>
+                    <a href="{% url 'checkout' %}"
+                        id="placeOrderBtn"
+                        class="btn btn-dark btn-md text-white btn-block d-flex justify-content-center mt-3"
+                        style="display: none;">Place Order
+                    </a> 
+                `;
+
+                // Show Place Order button
+                $("#placeOrderBtn").show();
+            }
+
+            // Update UI
+            $("#cart-container").html(html);
+        }
+    });
+}
+
+// Delete item
+function removeItem(productId, imageId) {
+    console.log("Removing product:", productId, "image:", imageId);
+
+    if (isNaN(productId) || isNaN(imageId)) {
+        console.error("Invalid product_id or image_id");
+        return;
+    }
+
+    $.ajax({
+        url: "/remove_from_cart/",
+        type: "POST",
+        data: {
+            product_id: productId,
+            image_id: imageId,
+            csrfmiddlewaretoken: "{{ csrf_token }}"
+        },
+        success: function (response) {
+            console.log("Removed:", response);
+            loadCart(); // refresh cart UI
+        },
+        error: function (xhr, status, error) {
+            console.error("Error removing:", error);
+        }
+    });
+}
+
+// Load on page ready
+$(document).ready(function () {
+    loadCart();
+});
+</script>

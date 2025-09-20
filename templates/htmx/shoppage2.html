@@ -1,0 +1,160 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% load static %}
+<!-- Shop Start-->
+<div class="container-fluid fruite">
+    <div class="container py-3">
+        <!-- <h3 class="mb-4 btn btn-lg btn-secondary">Shop Product</h3> -->
+        <div class="row g-4">
+            <div class="col-lg-12">
+                <div class="row g-4">
+
+                    <div class="col-lg-2">
+                        <div class="row g-4">
+                            <div class="col-lg-12">
+                                <div class="mb-3">
+                                    <!-- <h4>Categories</h4> -->
+                                    <!-- <li class="nav-item dropdown" style="list-style: none;">
+                                        <a class="nav-link dropdown-toggle text-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                            aria-expanded="false">
+                                            Category
+                                        </a>
+                                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                            {% for category in categories %}
+                                             <li>
+                                                <a class="dropdown-item" hx-get="?category={{ category.name}}" hx-target="#product-list"
+                                                    hx-swap="innerHTML" href="javascript:void(0)">
+                                                    {{ category.name }}
+                                                </a>
+                                             </li>
+                                            
+                                            {% endfor %}
+                                        </ul>
+                                    </li> -->
+                                    <ul class="list-unstyled fruite-categorie">
+                                        <!-- <li>
+                                            <div class="d-flex justify-content-between fruite-name">
+                                                <a href="/data/htmx/products/"><i class="fas fa-apple-alt me-2"></i>All
+                                                    Product</a>
+                                                <span>(30)</span>
+                                            </div>
+                                        </li> -->
+                                        {% for category in categories %}
+                                        <!-- <li>
+                                            <div class="d-flex justify-content-between fruite-name">
+                                                <a hx-get="?category={{ category.name}}" hx-target="#product-list"
+                                                    hx-swap="innerHTML" href="javascript:void(0)">
+                                                    <i class="fas fa-apple-alt me-2"></i>{{ category.name }}
+                                                </a>
+                                            </div>
+                                        </li> -->
+                                        {% endfor %}
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div class="col-lg-12">
+                                <h4 class="mb-3">Featured products</h4>
+
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                        <img src="{% static 'img/featur-1.jpg' %}" class="img-fluid rounded"
+                                            alt="Big Banana 1">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-2">Big Banana</h6>
+                                        <div class="d-flex mb-2">
+                                            <h5 class="fw-bold me-2">2.99 $</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                        <img src="{% static 'img/featur-2.jpg' %}" class="img-fluid rounded"
+                                            alt="Big Banana 2">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-2">Big Banana</h6>
+                                        <div class="d-flex mb-2">
+                                            <h5 class="fw-bold me-2">2.99 $</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex align-items-center justify-content-start">
+                                    <div class="rounded me-4" style="width: 100px; height: 100px;">
+                                        <img src="{% static 'img/featur-3.jpg' %}" class="img-fluid rounded"
+                                            alt="Big Banana 3">
+                                    </div>
+                                    <div>
+                                        <h6 class="mb-2">Big Banana</h6>
+                                        <div class="d-flex mb-2">
+                                            <h5 class="fw-bold me-2">2.99 $</h5>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="d-flex justify-content-center my-4">
+                                    <a href="#"
+                                        class="btn border border-secondary px-4 py-3 rounded-pill text-primary w-100">
+                                        View More
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="col-lg-10">
+                        <div class="d-flex justify-content-between">
+                            <!-- <div class="section-title pb-3">
+                            <span class="title-bar"></span>
+                             <h2 class="title-text">Search By "{{category.name}}"</h2>
+                            </div> -->
+                            <div class="">
+                            <li class="nav-item dropdown" style="list-style: none;">
+                                <a class="nav-link dropdown-toggle title-text text-dark" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+                                    Category
+                                </a>
+                                <ul class="dropdown-menu title-text text-dark" aria-labelledby="navbarDropdown">
+                                    {% for category in categories %}
+                                    <li>
+                                        <a class="dropdown-item text-dark" hx-get="?category={{ category.name}}" hx-target="#product-list" hx-swap="innerHTML"
+                                            href="javascript:void(0)">
+                                            {{ category.name }}
+                                        </a>
+                                    </li>
+                            
+                                    {% endfor %}
+                                </ul>
+                            </li>
+                            </div>
+                        </div>
+                        <!-- <div class="section-title pb-3">
+                            <span class="title-bar"></span>
+                            <h2 class="title-text">Search By "{{category.name}}"</h2>
+                        </div> -->
+                        <div id="product-list" class="row g-3">
+                            {% include 'htmx/product.html' %}
+                        </div>
+                        <div class="pagination d-flex justify-content-end mt-3">
+                            <a href="#" class="rounded">&laquo;</a>
+                            <a href="#" class="active rounded">1</a>
+                            <a href="#" class="rounded">2</a>
+                            <a href="#" class="rounded">3</a>
+                            <a href="#" class="rounded">4</a>
+                            <a href="#" class="rounded">5</a>
+                            <a href="#" class="rounded">6</a>
+                            <a href="#" class="rounded">&raquo;</a>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Shop End-->
+{% endblock %}

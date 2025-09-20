@@ -1,0 +1,337 @@
+{% extends 'mainshop/base.html' %}
+{% block content %}
+
+<div class="container my-5">
+    <h2 class="mb-0">Checkout</h2>
+    <a href="{% url 'home' %}" class="btn btn-dark text-white pt-2">
+            <i class="bi bi-arrow-left me-1 text-white"></i> Back to Shop
+     </a>
+    <div class="row pt-3">
+
+        <!-- Order Summary -->
+        <div class="col-md-7">
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th scope="col">Product</th>
+                            <th scope="col">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cart-body">
+                        <!-- Cart items will be injected here -->
+                    </tbody>
+                    <tfoot class="table-light" id="cart-footer">
+                        <!-- Totals will be injected here -->
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <!-- order created modal -->
+        <div class="modal fade" id="orderModal" tabindex="-1">
+                <div class="modal-dialog modal-sm modal-dialog-centered"> <!-- small + centered -->
+                    <div class="modal-content text-center shadow-lg border-0 rounded-4">
+            
+                        <div class="modal-body p-4">
+                            <!-- Success Icon -->
+                            <div class="mb-3">
+                                <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                            </div>
+            
+                            <!-- Title -->
+                            <h5 class="fw-bold text-success">Order Created!</h5>
+                            <p class="text-muted mb-3">
+                                Your order has been placed successfully 🎉
+                            </p>
+            
+                            <!-- Close Button -->
+                            <!-- <button class="btn btn-success w-100 rounded-pill" data-bs-dismiss="modal">
+                                <i class="bi bi-check2-circle me-1"></i> Okay
+                            </button> -->
+                            <!-- <button class="btn btn-success w-100 rounded-pill">
+                                <i class="bi bi-check2-circle me-1"></i> Okay
+                            </button> -->
+                            <a href="/" class="btn btn-success w-100 rounded-pill text-white">
+                                <i class="bi bi-check2-circle me-1"></i> Okay
+                            </a>
+                        </div>
+            
+                    </div>
+                </div>
+        </div>
+        <!--  -->
+        <!-- Billing Info -->
+        <div class="col-md-5 mt-2">
+            <h4 class="mb-3">Billing Address</h4>
+            <!-- {{value}} -->
+             
+            <!-- <form>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="phonenumber" class="form-label">Phone Number</label>
+                        <input type="number" class="form-control" id="phonenumber" placeholder="Your Phone Number">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="District" class="form-label">District</label>
+                        <input type="text" class="form-control" id="District" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Thana" class="form-label">Thana</label>
+                        <input type="text" class="form-control" id="Thana" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <h6 >Payment Method</h6>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment" id="full" value="full">
+                        <label class="form-check-label" for="full">
+                            Full Payment (Product+Delivery Charge)
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment" id="full" value="full">
+                        <label class="form-check-label" for="full">
+                            Only Delivery Charge
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment" id="cod" value="cod" checked>
+                        <label class="form-check-label" for="cod">Pay After Receiving Product (No Need Payment First)</label>
+                    </div>
+                 </div>   
+                <button class="btn btn-dark btn-lg w-100" type="submit">
+                    <i class="bi bi-credit-card-2-front-fill me-1"></i> Pay Now
+                </button>
+            </form> -->
+        
+            <form id="checkoutForm">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="firstName" class="form-label">Your Name</label>
+                        <input type="text" class="form-control" id="firstName" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="phonenumber" class="form-label">Phone Number</label>
+                        <input type="number" class="form-control" id="phonenumber" placeholder="Your Phone Number">
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <label for="address" class="form-label">Address</label>
+                    <input type="text" class="form-control" id="address" placeholder="1234 Main St" required>
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="District" class="form-label">District</label>
+                        <input type="text" class="form-control" id="District" required>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label for="Thana" class="form-label">Thana</label>
+                        <input type="text" class="form-control" id="Thana" required>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <h6>Payment Method</h6>
+            
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment" id="full_payment" value="full_payment">
+                        <label class="form-check-label" for="full_payment">
+                            Full Payment (Product + Delivery Charge)
+                        </label>
+                    </div>
+            
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment" id="delivery_only" value="delivery_only">
+                        <label class="form-check-label" for="delivery_only">
+                            Only Delivery Charge
+                        </label>
+                    </div>
+            
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="payment" id="cod" value="cod" checked>
+                        <label class="form-check-label" for="cod">
+                            Pay After Receiving Product (No Need Payment First)
+                        </label>
+                    </div>
+                </div>
+            
+                <button class="btn btn-dark btn-lg w-100" type="submit">
+                    <i class="bi bi-credit-card-2-front-fill me-1"></i> Pay Now
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+function getCSRFToken() {
+    let name = "csrftoken=";
+    let cookies = decodeURIComponent(document.cookie).split(';');
+    for (let cookie of cookies) {
+        cookie = cookie.trim();
+        if (cookie.startsWith(name)) return cookie.substring(name.length);
+    }
+    return "";
+}
+
+// Load cart items and update checkout table + cart count
+function loadCart() {
+    $.ajax({
+        url: '/cart/show/',
+        type: 'GET',
+        success: function(response) {
+            let cart = response.cart || {items: [], total: {subtotal:0, delivery_charge:0, grand_total:0}};
+            
+            // Update checkout table
+            let rows = '';
+            if (cart.items.length === 0) {
+                rows = `<tr><td colspan="2" class="text-center">Your cart is empty</td></tr>`;
+            } else {
+                cart.items.forEach(item => {
+                    rows += `
+                        <tr>
+                            <td class="d-flex flex-column align-items-center gap-1">
+                                <img src="${item.image_url}" alt="${item.product_name}" class="img-fluid rounded" style="width:60px;height:60px;object-fit:cover;">
+                                <span class="text-truncate" style="max-width:200px;">${item.product_name}</span>
+                                <span class="badge bg-primary">Variant: ${item.variant}</span>
+                                <span class="badge bg-dark">Quantity: ${item.quantity}</span>
+                                <span class="badge bg-primary">Qty × Price = ${item.quantity} × ${item.price}</span>
+                                <span class="badge bg-dark">Total: ${item.product_total}</span>
+                            </td>
+                            <td>
+                                <button class="btn btn-danger btn-sm rounded-circle" onclick="removeItem(${item.product_id}, ${item.image_id})">
+                                    <i class="bi bi-trash3"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            }
+            $('#cart-body').html(rows);
+
+            // Update checkout totals
+            let footer = '';
+            if(cart.items.length > 0){
+                footer = `
+                    <tr>
+                        <th class="text-start">Product Price</th>
+                        <th class="text-success fw-bold text-end">৳${cart.total.subtotal}</th>
+                    </tr>
+                    <tr>
+                        <th class="text-start">Delivery Charge</th>
+                        <th class="text-success fw-bold text-end">৳${cart.total.delivery_charge}</th>
+                    </tr>
+                    <tr>
+                        <th class="text-start">Grand Total</th>
+                        <th class="text-success fw-bold text-end">৳${cart.total.grand_total}</th>
+                    </tr>
+                `;
+            }
+            $('#cart-footer').html(footer);
+
+            // Update cart count in header or sidebar
+            $('#cart-count').text(cart.items.length);
+        },
+        error: function(err) {
+            console.error('Cart load failed', err);
+        }
+    });
+}
+
+// Remove item from cart
+function removeItem(productId, imageId) {
+    $.ajax({
+        url: '/remove_from_cart/',
+        type: 'POST',
+        data: {
+            product_id: productId,
+            image_id: imageId,
+            csrfmiddlewaretoken: getCSRFToken()
+        },
+        success: function(response) {
+            loadCart(); // Refresh both table and cart count
+        },
+        error: function(err) {
+            console.error('Remove failed', err);
+        }
+    });
+}
+
+// Load cart on page load
+$(document).ready(function() {
+    loadCart();
+
+// Hide by class name
+    document.getElementById("navbarRightIcon").classList.add("d-none");
+    
+    // elements.forEach(el => {
+    //     el.style.display = "none";
+    // });
+
+    // for hide button
+    // const navbarIcons = document.querySelector('.navbar-icons');
+    // if (navbarIcons) {
+    //     navbarIcons.style.display = 'none';
+    // }
+    // for hide button
+});
+</script>
+<script>
+$(document).ready(function(){
+    $("#checkoutForm").on("submit", function(e){
+        e.preventDefault(); // ফর্ম সাবমিট বন্ধ করলাম
+
+        let formData = {
+            name: $("#firstName").val(),
+            phone: $("#phonenumber").val(),
+            address: $("#address").val(),
+            district: $("#District").val(),
+            thana: $("#Thana").val(),
+            payment_method: $("input[name='payment']:checked").val()
+        };
+
+        $.ajax({
+            url: "/order/",  // আপনার Django view এর URL দিন
+            method: "POST",
+            data: JSON.stringify(formData),
+            contentType: "application/json",
+            headers: { "X-CSRFToken": getCookie("csrftoken") }, // Django CSRF Token
+            success: function(response){
+                // alert("Order placed successfully!");
+                if(response.status === "success"){
+                var myModal = new bootstrap.Modal(document.getElementById('orderModal'));
+                    myModal.show();}
+            },
+            error: function(xhr, status, error){
+                alert("Something went wrong!");
+                console.log(error);
+            }
+        });
+    });
+
+    // Django CSRF token function
+    // function getCookie(name) {
+    //     let cookieValue = null;
+    //     if (document.cookie && document.cookie !== "") {
+    //         let cookies = document.cookie.split(";");
+    //         for (let i = 0; i < cookies.length; i++) {
+    //             let cookie = cookies[i].trim();
+    //             if (cookie.substring(0, name.length + 1) === (name + "=")) {
+    //                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     return cookieValue;
+    // }
+});
+</script>
+{% endblock %}

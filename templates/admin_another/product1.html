@@ -1,0 +1,553 @@
+{% extends 'admin_another/adminbase.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Product List</h3>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#productModal" id="openAddModal">
+            <i class="bi bi-plus-circle"></i> Add Product
+        </button>
+    </div>
+
+    <!-- DataTable -->
+    <table id="productTable" class="table table-bordered table-hover table-responsive table-striped">
+        <thead class="table-light">
+            <tr>
+                <!-- <th>Product Name -->
+                <th style="width: 45%" ;>Product Detail
+                </th>
+                <!-- <th>ID <br>
+         Name<br>
+         Price
+         <br>
+         Discount
+         <br>
+         Final Price
+         <br>
+         Quantity
+        </th> -->
+                <!-- <th>Name</th>
+        <th>Price</th>
+        <th>Discount</th>
+        <th>Final Price</th>
+        <th>Quantity</th> -->
+                <!-- <th>Trending & NewArriable</th> -->
+                <!-- <th>Cover Image</th> -->
+                <th>Image</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <!-- Product Details -->
+                <td style="vertical-align: top; width: 35%;">
+                    <div class="p-2">
+                        <p class="small text-muted mb-1">ID: <span class="fw-bold">300</span></p>
+                        <hr>
+                        <div class="p-3 border rounded shadow-sm" style="max-width: 350px;">
+                            <!-- Badge -->
+                            <span class="badge bg-success text-uppercase"
+                                style="font-size: 11px; padding:6px 10px; border-radius:6px;">
+                                Product Title
+                            </span>
+                            <!-- Optional subtitle -->
+                            <p class="text-muted small mb-0">
+                                Short product description goes here
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="p-3 border rounded shadow-sm" style="max-width: 350px;">
+                            <!-- Price -->
+                            <p class="mb-2">Price: <span>$100.00</span></p>
+
+                            <!-- Discount -->
+                            <p class="mb-2">
+                                Discount:
+                                <span class="badge bg-success">10% Off</span>
+                            </p>
+
+                            <!-- Final Price -->
+                            <h6 class="fw-bold text-danger mb-0">Final Price: $90.00</h6>
+                        </div>
+                        <hr>
+                        <div class="p-3 border rounded shadow-sm" style="max-width: 350px;">
+                            <div class="mb-2 d-flex gap-2 flex-column">
+                                <span class="badge bg-danger">Trending: True</span>
+                                <span class="badge bg-primary">New Arrival: False</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!--Images -->
+
+                <td style="width: 30%;">
+                    <div class="text-center">
+                        <!-- Cover Image -->
+                        <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                            class="img-fluid rounded shadow-sm mb-2"
+                            style="width:120px; height:120px; object-fit:cover;">
+                        <span class="badge bg-primary mb-3">Cover Image</span>
+                        <hr>
+                        <!-- Variant Images Row -->
+                        <div class="d-flex justify-content-center gap-2 flex-column">
+                            <div>
+                                <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                                    class="img-fluid rounded shadow-sm mb-1"
+                                    style="width:60px; height:60px; object-fit:cover;">
+                                <span class="badge bg-secondary">Variant 1</span>
+                            </div>
+                            <div>
+                                <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                                    class="img-fluid rounded shadow-sm mb-1"
+                                    style="width:60px; height:60px; object-fit:cover;">
+                                <span class="badge bg-warning text-dark">Variant 2</span>
+                            </div>
+                            <div>
+                                <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                                    class="img-fluid rounded shadow-sm mb-1"
+                                    style="width:60px; height:60px; object-fit:cover;">
+                                <span class="badge bg-success">Variant 3</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!-- Action Buttons -->
+                <td style="text-align:center; vertical-align: middle; width: 20%;">
+                    <div class="btn-group-vertical gap-2">
+                        <button class="btn btn-sm btn-warning editBtn" data-id="{{ product.id }}">
+                            <i class="bi bi-pencil"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ product.id }}">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                        <button class="btn btn-sm btn-dark viewBtn" data-id="{{ product.id }}">
+                            <i class="bi bi-eye"></i> View
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <!--  -->
+             <tr>
+                <!-- Product Details -->
+                <td style="vertical-align: top; width: 35%;">
+                    <div class="p-2">
+                        <p class="small text-muted mb-1">ID: <span class="fw-bold">300</span></p>
+                        <hr>
+                        <div class="p-3 border rounded shadow-sm" style="max-width: 350px;">
+                            <!-- Badge -->
+                            <span class="badge bg-success text-uppercase"
+                                style="font-size: 11px; padding:6px 10px; border-radius:6px;">
+                                Product Title
+                            </span>
+                            <!-- Optional subtitle -->
+                            <p class="text-muted small mb-0">
+                                Short product description goes here
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="p-3 border rounded shadow-sm" style="max-width: 350px;">
+                            <!-- Price -->
+                            <p class="mb-2">Price: <span>$100.00</span></p>
+
+                            <!-- Discount -->
+                            <p class="mb-2">
+                                Discount:
+                                <span class="badge bg-success">10% Off</span>
+                            </p>
+
+                            <!-- Final Price -->
+                            <h6 class="fw-bold text-danger mb-0">Final Price: $90.00</h6>
+                        </div>
+                        <hr>
+                        <div class="p-3 border rounded shadow-sm" style="max-width: 350px;">
+                            <div class="mb-2 d-flex gap-2 flex-column">
+                                <span class="badge bg-danger">Trending: True</span>
+                                <span class="badge bg-primary">New Arrival: False</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!--Images -->
+
+                <td style="width: 30%;">
+                    <div class="text-center">
+                        <!-- Cover Image -->
+                        <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                            class="img-fluid rounded shadow-sm mb-2"
+                            style="width:120px; height:120px; object-fit:cover;">
+                        <span class="badge bg-primary mb-3">Cover Image</span>
+                        <hr>
+                        <!-- Variant Images Row -->
+                        <div class="d-flex justify-content-center gap-2 flex-column">
+                            <div>
+                                <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                                    class="img-fluid rounded shadow-sm mb-1"
+                                    style="width:60px; height:60px; object-fit:cover;">
+                                <span class="badge bg-secondary">Variant 1</span>
+                            </div>
+                            <div>
+                                <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                                    class="img-fluid rounded shadow-sm mb-1"
+                                    style="width:60px; height:60px; object-fit:cover;">
+                                <span class="badge bg-warning text-dark">Variant 2</span>
+                            </div>
+                            <div>
+                                <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                                    class="img-fluid rounded shadow-sm mb-1"
+                                    style="width:60px; height:60px; object-fit:cover;">
+                                <span class="badge bg-success">Variant 3</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!-- Action Buttons -->
+                <td style="text-align:center; vertical-align: middle; width: 20%;">
+                    <div class="btn-group-vertical gap-2">
+                        <button class="btn btn-sm btn-warning editBtn" data-id="{{ product.id }}">
+                            <i class="bi bi-pencil"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ product.id }}">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                        <button class="btn btn-sm btn-dark viewBtn" data-id="{{ product.id }}">
+                            <i class="bi bi-eye"></i> View
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            <!--  -->
+             <tr>
+                <!-- Product Details -->
+                <td style="vertical-align: top; width: 35%;">
+                    <div class="p-2">
+                        <p class="small text-muted mb-1">ID: <span class="fw-bold">200</span></p>
+                        <hr>
+                        <div class="p-3 border rounded shadow-sm" style="max-width: 350px;">
+                            <!-- Badge -->
+                            <span class="badge bg-success text-uppercase"
+                                style="font-size: 11px; padding:6px 10px; border-radius:6px;">
+                                Product Title
+                            </span>
+                            <!-- Optional subtitle -->
+                            <p class="text-muted small mb-0">
+                                Short product description goes here
+                            </p>
+                        </div>
+                        <hr>
+                        <div class="p-3 border rounded shadow-sm" style="max-width: 350px;">
+                            <!-- Price -->
+                            <p class="mb-2">Price: <span>$100.00</span></p>
+
+                            <!-- Discount -->
+                            <p class="mb-2">
+                                Discount:
+                                <span class="badge bg-success">10% Off</span>
+                            </p>
+
+                            <!-- Final Price -->
+                            <h6 class="fw-bold text-danger mb-0">Final Price: $90.00</h6>
+                        </div>
+                        <hr>
+                        <div class="p-3 border rounded shadow-sm" style="max-width: 350px;">
+                            <div class="mb-2 d-flex gap-2 flex-column">
+                                <span class="badge bg-danger">Trending: True</span>
+                                <span class="badge bg-primary">New Arrival: False</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!--Images -->
+
+                <td style="width: 30%;">
+                    <div class="text-center">
+                        <!-- Cover Image -->
+                        <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                            class="img-fluid rounded shadow-sm mb-2"
+                            style="width:120px; height:120px; object-fit:cover;">
+                        <span class="badge bg-danger mb-3">Cover Image</span>
+                        <hr>
+                        <!-- Variant Images Row -->
+                        <div class="d-flex justify-content-center gap-2 flex-column">
+                            <div>
+                                <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                                    class="img-fluid rounded shadow-sm mb-1"
+                                    style="width:60px; height:60px; object-fit:cover;">
+                                <span class="badge bg-success">Variant 1</span>
+                            </div>
+                            <div>
+                                <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                                    class="img-fluid rounded shadow-sm mb-1"
+                                    style="width:60px; height:60px; object-fit:cover;">
+                                <span class="badge bg-success ">Variant 2</span>
+                            </div>
+                            <div>
+                                <img src="https://media.istockphoto.com/id/1249219777/photo/shopping-online-concept-parcel-or-paper-cartons-with-a-shopping-cart-logo-in-a-trolley-on-a.jpg?s=612x612&w=0&k=20&c=EWKEahyVLY8iAHyirCCDESHRGW37lqUJ7In0SssNSLE="
+                                    class="img-fluid rounded shadow-sm mb-1"
+                                    style="width:60px; height:60px; object-fit:cover;">
+                                <span class="badge bg-success">Variant 3</span>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <!-- Action Buttons -->
+                <td style="text-align:center; vertical-align: middle; width: 20%;">
+                    <div class="btn-group-vertical gap-2">
+                        <button class="btn btn-sm btn-warning editBtn" data-id="{{ product.id }}">
+                            <i class="bi bi-pencil"></i> Edit
+                        </button>
+                        <button class="btn btn-sm btn-danger deleteBtn" data-id="{{ product.id }}">
+                            <i class="bi bi-trash"></i> Delete
+                        </button>
+                        <button class="btn btn-sm btn-dark viewBtn" data-id="{{ product.id }}">
+                            <i class="bi bi-eye"></i> View
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalTitle">Add Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <input type="hidden" name="product_id" id="product_id">
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Name</label>
+                        <input type="text" name="name" id="id_name" class="form-control"
+                            placeholder="Enter product name">
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Price</label>
+                            <input type="number" name="price" id="id_price" class="form-control">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Discount (%)</label>
+                            <input type="number" name="discount" id="id_discount" class="form-control" value="0">
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Final Price</label>
+                            <input type="number" name="afterdiscountprice" id="id_afterdiscountprice"
+                                class="form-control bg-light" readonly>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="form-label fw-bold">Description 1</label>
+                        <textarea name="description1" id="id_description1" rows="2" class="form-control"></textarea>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label fw-bold">Description 2</label>
+                        <textarea name="description2" id="id_description2" rows="2" class="form-control"></textarea>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" name="quantity" id="id_quantity" class="form-control" value="1">
+                    </div>
+
+                    <div class="form-check mt-2">
+                        <input type="checkbox" class="form-check-input" name="trending" id="trending">
+                        <label class="form-check-label" for="trending">Trending</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" name="new_arrival" id="new_arrival">
+                        <label class="form-check-label" for="new_arrival">New Arrival</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Cover Photo</label>
+                        <input type="file" name="coverphoto" class="form-control" id="coverPhotoInput" accept="image/*">
+                        <img id="coverPhotoPreview" src="" class="img-thumbnail mt-2"
+                            style="max-width:150px;display:none;">
+                    </div>
+
+                    <!-- ✅ Product Variant Images -->
+                    <div class="mb-3">
+                        <label class="form-label">Product Variant Images</label>
+                        <div id="productImages">
+                            <!-- dynamic rows will be inserted here -->
+                        </div>
+                        <button type="button" id="addImage" class="btn btn-outline-primary mt-2">+ Add another Product
+                            Image</button>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="productForm" class="btn btn-success">Save Product</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- jQuery, DataTables, Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/dataTables.bootstrap5.min.css" />
+<script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.4/js/dataTables.bootstrap5.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        // Initialize DataTable
+        $('#productTable').DataTable();
+
+        // Cover photo preview
+        $("#coverPhotoInput").on("change", function (e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    $("#coverPhotoPreview").attr("src", e.target.result).show();
+                }
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Discount price auto-calc
+        function calculateDiscountedPrice() {
+            let price = parseFloat($("#id_price").val()) || 0;
+            let discount = parseFloat($("#id_discount").val()) || 0;
+            let discounted = price - (price * discount / 100);
+            $("#id_afterdiscountprice").val(Math.round(discounted));
+        }
+        $("#id_price, #id_discount").on("input", calculateDiscountedPrice);
+
+        // Open Add Modal
+        $("#openAddModal").click(function () {
+            $("#productForm")[0].reset();
+            $("#product_id").val("");
+            $("#modalTitle").text("Add Product");
+            $("#coverPhotoPreview").hide();
+            $("#productImages").empty(); // reset variants
+        });
+
+        // ✅ Add product variant row
+        $("#addImage").click(function () {
+            const row = `
+      <div class="row g-2 mb-2 image-row">
+        <div class="col-md-4">
+          <input type="text" name="image_name[]" class="form-control" placeholder="Variant Name">
+        </div>
+        <div class="col-md-4">
+          <input type="file" name="image_file[]" class="form-control image-input" accept="image/*">
+        </div>
+        <div class="col-md-2 d-flex align-items-center preview-container">
+          <span class="text-muted">No Image</span>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-danger remove-row">&times;</button>
+        </div>
+      </div>
+    `;
+            $("#productImages").append(row);
+        });
+
+        // Preview for variant images
+        $(document).on("change", ".image-input", function () {
+            const file = this.files[0];
+            const previewContainer = $(this).closest(".image-row").find(".preview-container");
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    previewContainer.html(`<img src="${e.target.result}" class="img-thumbnail" style="width:80px; height:80px;">`);
+                }
+                reader.readAsDataURL(file);
+            } else {
+                previewContainer.html(`<span class="text-muted">No Image</span>`);
+            }
+        });
+
+        // Remove variant row
+        $(document).on("click", ".remove-row", function () {
+            $(this).closest(".image-row").remove();
+        });
+
+        // Edit button
+        $(".editBtn").click(function () {
+            const id = $(this).data("id");
+            $.get(`/products/${id}/`, function (data) {
+                $("#product_id").val(data.id);
+                $("#id_name").val(data.name);
+                $("#id_price").val(data.price);
+                $("#id_discount").val(data.discount);
+                $("#id_afterdiscountprice").val(data.afterdiscountprice);
+                $("#id_description1").val(data.description1);
+                $("#id_description2").val(data.description2);
+                $("#id_quantity").val(data.quantity);
+                $("#trending").prop("checked", data.trending);
+                $("#new_arrival").prop("checked", data.new_arrival);
+                if (data.coverphoto_url) {
+                    $("#coverPhotoPreview").attr("src", data.coverphoto_url).show();
+                }
+
+                // ✅ Populate variant images if available
+                $("#productImages").empty();
+                if (data.variants) {
+                    data.variants.forEach(function (v) {
+                        const row = `
+            <div class="row g-2 mb-2 image-row">
+              <div class="col-md-4">
+                <input type="text" name="image_name[]" class="form-control" value="${v.name}">
+              </div>
+              <div class="col-md-4">
+                <input type="file" name="image_file[]" class="form-control image-input" accept="image/*">
+              </div>
+              <div class="col-md-2 d-flex align-items-center preview-container">
+                ${v.url ? `<img src="${v.url}" class="img-thumbnail" style="width:80px;height:80px;">` : `<span class="text-muted">No Image</span>`}
+              </div>
+              <div class="col-md-2">
+                <button type="button" class="btn btn-danger remove-row">&times;</button>
+              </div>
+            </div>`;
+                        $("#productImages").append(row);
+                    });
+                }
+
+                $("#modalTitle").text("Edit Product");
+                $("#productModal").modal("show");
+            });
+        });
+
+        // Submit form
+        $("#productForm").submit(function (e) {
+            e.preventDefault();
+            let formData = new FormData(this);
+            let id = $("#product_id").val();
+            let url = id ? `/products/update/${id}/` : `/products/add/`;
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+                    $("#productModal").modal("hide");
+                    location.reload();
+                }
+            });
+        });
+
+        // Delete button
+        $(".deleteBtn").click(function () {
+            if (confirm("Are you sure to delete this product?")) {
+                const id = $(this).data("id");
+                $.post(`/products/delete/${id}/`, { csrfmiddlewaretoken: '{{ csrf_token }}' }, function () {
+                    location.reload();
+                });
+            }
+        });
+    });
+</script>
+{% endblock %}

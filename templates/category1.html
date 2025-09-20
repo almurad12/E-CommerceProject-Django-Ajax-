@@ -1,0 +1,35 @@
+{% load static %}
+<!-- category start -->
+    <div class="container middle-nav-carousel mt-4 position-relative">
+        <div class="d-flex align-items-center">
+            <span class="title-bar"></span>
+            <h2 class="mb-0 text-color-change" style="margin-left:1%;">Category</h2>
+        </div>
+    
+        <div class="owl-carousel owl-theme pt-3">
+            {% for category in categories %}
+                <div class="card align-items-center pt-2 border-dark category-card mb-0 ">
+                    <a href="{% url 'product_page' %}" class="stretched-link"></a>
+                    {% if category.image %}
+                    <img src="{{ category.image.url }}" class="card-img-top img-fluid rounded-circle"
+                        style="width: 4em; height: 4em; object-fit: cover;" alt="{{ category.name }}">
+                    {% else %}
+                    <img src="{% static 'img/1737531358122.jpeg' %}" class="card-img-top img-fluid rounded-circle"
+                        style="width: 4em; height: 4em; object-fit: cover;" alt="{{ category.name }}">
+                    {% endif %}
+                    <div class="card-body text-center mx-auto pt-1 position-relative text-wrap">
+                        <a href="./cart.html" class="text-dark stretched-link text-center small-link" style="font-size: 0.7em; word-wrap: break-word; display: inline-block; max-width: 100%;">
+                            {{ category.name }}
+                        </a>
+                       
+                    </div>
+                    
+                </div>
+            {% endfor %}
+            
+            
+    
+            <!-- Repeat this structure for all other cards -->
+        </div>
+    </div>
+    <!-- category end -->

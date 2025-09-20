@@ -1,0 +1,992 @@
+{% extends 'admin_another/adminbase.html' %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h3>Product List</h3>
+        <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#productModal" id="openAddModal">
+            <i class="bi bi-plus-circle"></i> Add Product
+        </button>
+    </div>
+
+    <!-- DataTable -->
+    <table id="productTable" class="table table-bordered table-hover table-responsive table-striped">
+        <thead class="table-light">
+            <tr>
+                <th style="width: 40%;">Product Detail</th>
+                <th>Image</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Dynamic rows will be inserted via JS -->
+        </tbody>
+    </table>
+</div>
+
+<!-- Add product Modal -->
+<div class="modal fade" id="productModal" tabindex="-1">
+    <div class="modal-dialog modal-lg modal-dialog-scrollable">
+        <div class="modal-content">
+            <div class="modal-header bg-dark text-white">
+                <h5 class="modal-title text-white" id="modalTitle">Add Product</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <form id="productForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- <input type="hidden" name="product_id" id="product_id"> -->
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Name</label>
+                        <input type="text" name="name" id="id_name" class="form-control"
+                            placeholder="Enter product name" required>
+                        <div class="invalid-feedback">
+                            Please enter the product name.
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Subcategory</label>
+                        <select name="sub_category" id="id_subcategory" class="form-select">
+                            <option value="">Select Subcategory</option>
+                            {% for sub in subcategories %}
+                            <option value="{{ sub.id }}">{{ sub.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+
+                    <div class="row g-3">
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Price</label>
+                            <input type="number" name="price" id="id_price" class="form-control" required>
+                            <div class="invalid-feedback">
+                                Please enter the price.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Discount (%)</label>
+                            <input type="number" name="discount" id="id_discount" class="form-control" value="0"
+                                required>
+                            <div class="invalid-feedback">
+                                Please enter the discount.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <label class="form-label fw-bold">Final Price</label>
+                            <input type="number" name="afterdiscountprice" id="id_afterdiscountprice"
+                                class="form-control bg-light" readonly>
+                        </div>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="form-label fw-bold">Description 1</label>
+                        <textarea name="description1" id="id_description1" rows="2" class="form-control"
+                            required></textarea>
+                        <div class="invalid-feedback">
+                            Please enter the description1
+                        </div>
+                    </div>
+                    <div class="mt-3">
+                        <label class="form-label fw-bold">Description 2</label>
+                        <textarea name="description2" id="id_description2" rows="2" class="form-control"
+                            required></textarea>
+                        <div class="invalid-feedback">
+                            Please enter the description2
+                        </div>
+                    </div>
+
+                    <!-- <div class="mt-3">
+                        <label class="form-label">Quantity</label>
+                        <input type="number" name="quantity" id="id_quantity" class="form-control" value="1">
+                    </div> -->
+
+                    <div class="form-check mt-2">
+                        <input type="checkbox" class="form-check-input" name="trending" id="trending">
+                        <label class="form-check-label" for="trending">Trending</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input type="checkbox" class="form-check-input" name="newArriable" id="new_arrival">
+                        <label class="form-check-label" for="new_arrival">New Arrival</label>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Cover Photo</label>
+                        <input type="file" name="coverphoto" class="form-control" id="coverPhotoInput" accept="image/*"
+                        required>
+                        <img id="coverPhotoPreview" src="" class="img-thumbnail mt-2"
+                            style="max-width:150px;display:none;">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Product Variant Images</label>
+                        <div id="productImages"></div>
+                        <button type="button" id="addImage" class="btn btn-dark mt-2">+ Add Product Image</button>
+                    </div>
+                    <button type="submit" form="productForm" class="btn btn-success">Save Product</button>
+                </form>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" form="productForm" class="btn btn-success">Save Product</button>
+            </div> -->
+        </div>
+    </div>
+</div>
+<!-- show single product modal -->
+<!-- Product Details Modal -->
+<div class="modal fade" id="anotherproductModal" tabindex="-1" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <div class="modal-header bg-dark text-center">
+                <h5 class="modal-title text-white" id="productDetailsModalLabel">Product Details</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+           <div class="modal-body" id="productDetails">
+    <div class="row g-4 align-items-start">
+         <img id="productImage" class="img-fluid rounded shadow mb-3" src="" alt="Product Image">
+        <!-- Left Column (Image + Variants) -->
+        <div class="col-md-5 text-center">
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+                    <img id="productImage" class="img-fluid rounded mb-3 shadow-sm" src="" alt="Product Image">
+                    <div id="variantImages" class="d-flex flex-wrap gap-2 justify-content-center"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Column (Details) -->
+        <div class="col-md-7">
+            <h4 id="productName" class="fw-bold text-dark"></h4>
+            <p class="text-muted small mb-2" id="productSubcategory"></p>
+
+            <h5 class="mb-3">
+                <span class="text-danger fw-bold" id="productFinalPrice"></span>
+                <span class="text-muted text-decoration-line-through ms-2" id="productOriginalPrice"></span>
+                <span class="badge bg-success ms-2 px-2 py-1 rounded-pill" id="productDiscount"></span>
+            </h5>
+
+            <div class="mb-3">
+                <span class="badge bg-warning text-dark me-2" id="productTrending" style="display:none;">
+                    <i class="bi bi-fire"></i> Trending
+                </span>
+                <span class="badge bg-info text-dark" id="productNewArrival" style="display:none;">
+                    <i class="bi bi-stars"></i> New Arrival
+                </span>
+            </div>
+
+            <div class="border-top pt-3">
+                <strong>Description 1:</strong>
+                <p class="mb-2" id="productDescription1"></p>
+                <hr>
+                <strong>Description 2:</strong>
+                <p id="productDescription2"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+        </div>
+    </div>
+</div>
+
+
+
+{% endblock %}
+
+{% block contentscript %}
+<script>
+    // Cover photo preview
+    $("#coverPhotoInput").on("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                $("#coverPhotoPreview").attr("src", e.target.result).show();
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+    // Discount price auto-calc
+    function calculateDiscountedPrice() {
+        let price = parseFloat($("#id_price").val()) || 0;
+        let discount = parseFloat($("#id_discount").val()) || 0;
+        $("#id_afterdiscountprice").val(Math.round(price - (price * discount / 100)));
+    }
+    $("#id_price, #id_discount").on("input", calculateDiscountedPrice);
+
+    // Variant images
+    $("#addImage").click(function () {
+        const row = `
+      <div class="row g-2 mb-2 image-row">
+        <div class="col-md-4">
+          <input type="text" name="image_name[]" class="form-control" placeholder="Variant Name" required>
+        </div>
+        <div class="col-md-4">
+          <input type="file" name="image_file[]" class="form-control image-input" accept="image/*" required>
+        </div>
+        <div class="col-md-2 d-flex align-items-center preview-container">
+          <span class="text-muted">No Image</span>
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-danger remove-row">&times;</button>
+        </div>
+      </div>`;
+        $("#productImages").append(row);
+    });
+
+    $(document).on("change", ".image-input", function () {
+        const file = this.files[0];
+        const previewContainer = $(this).closest(".image-row").find(".preview-container");
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                previewContainer.html(`<img src="${e.target.result}" class="img-thumbnail" style="width:80px; height:80px;">`);
+            }
+            reader.readAsDataURL(file);
+        } else {
+            previewContainer.html(`<span class="text-muted">No Image</span>`);
+        }
+    });
+
+    $(document).on("click", ".remove-row", function () {
+        $(this).closest(".image-row").remove();
+    });
+
+    
+
+    $("#productForm").submit(function (e) {
+        e.preventDefault();
+
+        let form = this;
+        let valid = true;
+
+        // Check all required fields
+        $(form).find("input[required], select[required], textarea[required]").each(function () {
+            if (!$(this).val().trim()) {
+                valid = false;
+                $(this).addClass("is-invalid"); // Bootstrap error style
+            } else {
+                $(this).removeClass("is-invalid");
+            }
+        });
+
+        if (!valid) {
+            alert("Please fill in all required fields.");
+            return; // Stop submit
+        }
+
+        let formData = new FormData(this);
+
+        $.ajax({
+            url: "/create-product/", // your Django URL
+            type: "POST",
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (res) {
+                if (res.status === "success") {
+                    alert("Product created successfully!");
+                    $("#productModal").modal("hide");
+                }
+            },
+            error: function (xhr) {
+                alert("Error: " + xhr.responseText);
+            }
+        });
+    });
+</script>
+
+<script>
+    $(document).ready(function () {
+        $('#productTable').DataTable({
+            ajax: {
+                url: "/products/",   // Django API endpoint
+                dataSrc: "results"
+            },
+            columns: [
+                {
+                    data: null,
+                    render: function (data) {
+                        return `
+            <div class="card" style="width: 10rem;">
+                <div class="card-body">
+                    <a href="/shop/${data.id}" class="card-subtitle text-danger"><strong>${data.name}</strong></a><hr>
+                    <p class="card-text mb-1">Price: ${data.price}</p>
+                    <p class="card-text mb-1">Discount: ${data.discount}%</p>
+                    <p class="card-text text-danger mb-1">Final Price: ${data.afterdiscountprice}</p>
+                    <p class="card-text mb-1">
+                    <span class="badge bg-success">Trending: ${data.trending ? '✅' : '❌'}
+                        </span>
+                    </p>
+                    <p class="card-text mb-1">
+                    <span class="badge bg-success">New Arriable: ${data.newArriable ? '✅' : '❌'}</span>
+                    </p>
+                    <span class="badge badge-info">${data.sub_category ? data.sub_category.name : "N/A"}</span>
+                    <hr>
+                    <p class="card-text mb-0 badge-info"><strong>Subcategory:</strong> ${data.sub_category ? data.sub_category.name : "N/A"}</p>
+
+                </div>
+            </div>                        
+                    `;
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data) {
+                        // Cover Image Section
+                        let cover = "";
+                        if (data.coverphoto) {
+                            cover = `
+            <h6 class="bg-dark text-white px-2 py-1 d-inline-block">Cover Image</h6><br>
+            <div class="">
+                <img src="${data.coverphoto}" width="80" height="80" class="rounded border shadow-sm">
+            </div>
+            <hr>
+        `;
+                        } else {
+                            cover = `<span class="badge bg-warning text-dark mb-2">No Cover Image</span>`;
+                        }
+
+                        // Variant Images Section
+                        let variants = "";
+                        if (data.productimages && data.productimages.length > 0) {
+                            variants = data.productimages.map(img => `
+            <div class="d-inline-block text-center me-2 mb-2">
+                <img src="${img.image}" width="70" height="70" class="rounded border shadow-sm"><br>
+                <span class="badge bg-dark mt-1">${img.name || "Unnamed"}</span>
+            </div>
+        `).join("");
+                            variants = `<h6 class="bg-danger text-white px-2 py-1 d-inline-block">Variant Image</h6><br>` + variants;
+                        } else {
+                            variants = `<span class="badge bg-warning text-dark">No Variant Images</span>`;
+                        }
+
+                        // Return both sections separately
+                        return cover + "<br>" + variants;
+                    }
+                },
+                {
+                    data: null,
+                    render: function (data) {
+                        return `
+                    <div class="d-flex justify-content-center gap-2 flex-column">
+                        <button class="btn btn-sm btn-success flex-fill viewBtn" data-id="${data.id}">
+                        <i class="bi bi-eye"></i> View
+                        </button>
+                        <button class="btn btn-sm btn-warning flex-fill editBtn" data-id="${data.id}"><i class="bi bi-pencil-square"></i>Edit</button>
+                        <button class="btn btn-sm btn-danger flex-fill deleteBtn" data-id="${data.id}"><i class="bi bi-trash"></i>Delete</button>
+                    </div>
+                    `;
+                    }
+                }
+            ]
+        });
+    });
+</script>
+<!-- Delete data -->
+<script>
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+            let cookies = document.cookie.split(";");
+            for (let i = 0; i < cookies.length; i++) {
+                let cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === name + "=") {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    // delete data
+    $(document).on("click", ".deleteBtn", function () {
+        let id = $(this).data("id");
+        console.log(id)
+
+        if (confirm("Are you sure you want to delete this product?")) {
+            $.ajax({
+                url: `/products/${id}/`,   // Django REST endpoint
+                type: "DELETE",
+                headers: { "X-CSRFToken": getCookie("csrftoken") }, // CSRF for Django
+                success: function () {
+                    alert("Product deleted successfully!");
+                    $("#productTable").DataTable().ajax.reload(); // Refresh table
+                },
+                error: function (xhr) {
+                    alert("Error deleting product: " + xhr.responseText);
+                }
+            });
+        }
+    });
+</script>
+<!-- show single product value -->
+<script>
+    $(document).on("click", ".viewBtn", function () {
+        let productId = $(this).data("id");  // get id from data-id
+        showProduct(productId);               // call function to load modal
+    });
+    function showProduct(id) {
+        $.ajax({
+            url: `/products/${id}/`,
+            type: "GET",
+            success: function (data) {
+                // ✅ Clear previous data
+                $("#productName, #productSubcategory, #productFinalPrice, #productOriginalPrice, #productDiscount, #productDescription1, #productDescription2").text("");
+                $("#productTrending, #productNewArrival").hide();
+                $("#productImage").attr("src", "");
+                $(".col-md-5.text-center").empty();   // clear old variant images
+
+                // Update product info
+                $("#productName").text(data.name);
+                $("#productSubcategory").text(data.sub_category ? data.sub_category.name : "N/A");
+
+                $("#productFinalPrice").text(data.afterdiscountprice);
+                $("#productOriginalPrice").text(data.price);
+                // $("#productDiscount").text(data.discount);
+                $("#productDiscount").text(data.discount ? data.discount + "% off" : "");
+
+                $("#productDescription1").text(data.description1);
+                $("#productDescription2").text(data.description2);
+
+                // Badges
+                if (data.trending) $("#productTrending").show();
+                if (data.newArriable) $("#productNewArrival").show();
+
+                // Cover Image
+                if (data.coverphoto) {
+                    $("#productImage").attr("src", data.coverphoto);
+                }
+
+                // Variant Images
+                let variantHtml = "";
+                if (data.productimages && data.productimages.length > 0) {
+                    data.productimages.forEach(img => {
+                        variantHtml += `
+                        <div class="mb-3 text-center">
+                            <img src="${img.image}" class="img-thumbnail w-50 shadow-sm">
+                            <h6 class="mt-2 fw-semibold">${img.name}</h6>
+                        </div>
+                    `;
+                    });
+                } else {
+                    variantHtml = `<p class="text-muted">No variant images available.</p>`;
+                }
+
+                $(".col-md-5.text-center").append(variantHtml);
+
+                // Open modal
+                $("#anotherproductModal").modal("show");
+            },
+            error: function (xhr) {
+                alert("Error fetching product details!");
+                console.error(xhr.responseText);
+            }
+        });
+    }
+
+</script>
+<!-- Edit data -->
+ <!-- <script>
+    $(document).on("click", ".editBtn", function () {
+    let productId = $(this).data("id");
+    console.log(productId)
+    $.ajax({
+        url: `/products/${productId}/`,
+        type: "GET",
+        success: function (data) {
+            // fill form
+            console.log(data)
+            $("#product_id").val(data.id);
+            $("#id_name").val(data.name);
+            // $("#id_subcategory").val(data.sub_category);
+            $("#id_subcategory").val(data.sub_category.id).trigger("change");
+            
+            $("#id_price").val(data.price);
+            $("#id_discount").val(data.discount);
+            $("#id_afterdiscountprice").val(data.afterdiscountprice);
+            $("#id_description1").val(data.description1);
+            $("#id_description2").val(data.description2);
+            $("#trending").prop("checked", data.trending);
+            $("#new_arrival").prop("checked", data.newArriable);
+
+            if (data.coverphoto) {
+                $("#coverPhotoPreview").attr("src", data.coverphoto).show();
+            } else {
+                $("#coverPhotoPreview").hide().attr("src", "");
+            }
+            // this one for variant Image
+            $("#productImages").empty(); // clear old rows
+
+            data.productimages.forEach(function (variant) {
+                console.log(variant)
+                const row = `
+                    <div class="row g-2 mb-2 image-row">
+                        <div class="col-md-4">
+                        <input type="text" name="image_name[]" class="form-control" 
+                                value="${variant.name}" placeholder="Variant Name" required>
+                        </div>
+                        <div class="col-md-4">
+                        <input type="file" name="image_file[]" class="form-control image-input" 
+                                accept="image/*">
+                        </div>
+                        <div class="col-md-2 d-flex align-items-center preview-container">
+                        ${variant.image
+                                        ? `<img src="${variant.image}" class="img-thumbnail" width="80">`
+                                        : `<span class="text-muted">No Image</span>`}
+                        </div>
+                        <div class="col-md-2">
+                        <button type="button" class="btn btn-danger remove-row">&times;</button>
+                        </div>
+                    </div>`;
+
+                $("#productImages").append(row);
+            });
+            // this one for variant Image
+            $("#modalTitle").text("Edit Product");
+            $("#productModal").modal("show");
+        },
+        error: function (xhr) {
+            alert("Failed to load product details!");
+            console.error(xhr.responseText);
+        }
+    });
+});
+ </script> -->
+
+<!-- <script>
+$(document).ready(function () {
+    // 👉 Edit product (GET details + open modal)
+    $(document).on("click", ".editBtn", function () {
+        let productId = $(this).data("id");
+
+        $.ajax({
+            url: `/products/${productId}/`,
+            type: "GET",
+            success: function (data) {
+                // Fill form fields
+                $("#product_id").val(data.id);
+                $("#id_name").val(data.name);
+                $("#id_subcategory").val(data.sub_category.id).trigger("change");
+                $("#id_price").val(data.price);
+                $("#id_discount").val(data.discount);
+                $("#id_afterdiscountprice").val(data.afterdiscountprice);
+                $("#id_description1").val(data.description1);
+                $("#id_description2").val(data.description2);
+                $("#trending").prop("checked", data.trending);
+                $("#new_arrival").prop("checked", data.new_arrival || data.newArriable);
+
+                // Cover photo preview
+                if (data.coverphoto) {
+                    $("#coverPhotoPreview").attr("src", data.coverphoto).show();
+                } else {
+                    $("#coverPhotoPreview").hide().attr("src", "");
+                }
+
+                // Variant images
+                $("#productImages").empty(); // clear old rows
+                data.productimages.forEach(function (variant) {
+                    const row = `
+                        <div class="row g-2 mb-2 image-row">
+                            <input type="hidden" name="image_id[]" value="${variant.id}">
+                            <input type="hidden" name="existing_image_url[]" value="${variant.image || ''}">
+                            <div class="col-md-4">
+                                <input type="text" name="image_name[]" class="form-control" 
+                                       value="${variant.name}" placeholder="Variant Name" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="file" name="image_file[]" class="form-control image-input" accept="image/*">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center preview-container">
+                                ${variant.image 
+                                    ? `<img src="${variant.image}" class="img-thumbnail" width="80">`
+                                    : `<span class="text-muted">No Image</span>`}
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger remove-row">&times;</button>
+                            </div>
+                        </div>`;
+                    $("#productImages").append(row);
+                });
+
+                // Show modal
+                $("#modalTitle").text("Edit Product");
+                $("#productModal").modal("show");
+            },
+            error: function (xhr) {
+                alert("Failed to load product details!");
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+    // 👉 Add new variant image row
+    $("#addImage").click(function () {
+        const newRow = `
+            <div class="row g-2 mb-2 image-row">
+                <div class="col-md-4">
+                    <input type="text" name="image_name[]" class="form-control" placeholder="Variant Name" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="file" name="image_file[]" class="form-control image-input" accept="image/*" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-center preview-container">
+                    <span class="text-muted">No Image</span>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-row">&times;</button>
+                </div>
+            </div>`;
+        $("#productImages").append(newRow);
+    });
+
+    // 👉 Remove row
+    $(document).on("click", ".remove-row", function () {
+        $(this).closest(".image-row").remove();
+    });
+
+    // 👉 Submit form (POST new / PUT update)
+    $("#productForm").submit(function (e) {
+        e.preventDefault();
+
+        const id = $("#product_id").val();
+        const url = id ? `/products/${id}/` : `/products/`;
+        const method = id ? "PUT" : "POST"; // Or PATCH if your backend prefers
+
+        let formData = new FormData(this);
+
+        // If cover image is displayed but not changed, add the existing URL
+        if ($("#coverPhotoPreview").attr("src")) {
+            formData.append("existing_coverphoto", $("#coverPhotoPreview").attr("src"));
+        }
+
+        // For variant images: if no file chosen, keep old image url
+        $("#productImages .image-row").each(function (index, row) {
+            let fileInput = $(row).find('input[name="image_file[]"]')[0];
+            let existingUrl = $(row).find('input[name="existing_image_url[]"]').val();
+            if (fileInput && fileInput.files.length === 0 && existingUrl) {
+                formData.append("keep_existing_images[]", existingUrl);
+            }
+        });
+
+        $.ajax({
+            url: url,
+            type: method,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert("Product saved successfully!");
+                $("#productModal").modal("hide");
+                location.reload();
+            },
+            error: function (xhr) {
+                alert("Failed to save product!");
+                console.error(xhr.responseText);
+            },
+        });
+    });
+});
+</script> -->
+<!-- <script>
+$(document).ready(function () {
+    // 👉 Edit product (GET details + open modal)
+    $(document).on("click", ".editBtn", function () {
+        let productId = $(this).data("id");
+
+        $.ajax({
+            url: `/products/${productId}/`,
+            type: "GET",
+            success: function (data) {
+                // Fill form fields
+                $("#product_id").val(data.id);
+                $("#id_name").val(data.name);
+                $("#id_subcategory").val(data.sub_category.id).trigger("change");
+                $("#id_price").val(data.price);
+                $("#id_discount").val(data.discount);
+                $("#id_afterdiscountprice").val(data.afterdiscountprice);
+                $("#id_description1").val(data.description1);
+                $("#id_description2").val(data.description2);
+                $("#trending").prop("checked", data.trending);
+                $("#new_arrival").prop("checked", data.new_arrival || data.newArriable);
+
+                // Cover photo preview
+                // if (data.coverphoto) {
+                //     $("#coverPhotoPreview").attr("src", data.coverphoto).show();
+                // } else {
+                //     $("#coverPhotoPreview").hide().attr("src", "");
+                // }
+                if (data.coverphoto) {
+                    const baseUrl = "http://127.0.0.1:8000/";
+                    // Check korbe jodi URL already full thake, abar add korbe na
+                    const coverUrl = data.coverphoto.startsWith("http") ? data.coverphoto : baseUrl + data.coverphoto;
+
+                    $("#coverPhotoPreview")
+                        .attr("src", coverUrl)
+                        .show();
+                    $("#coverphotoInput").data("existing-id", data.coverphoto_id || null);
+                } else {
+                    $("#coverPhotoPreview").hide().attr("src", "");
+                }
+
+               
+                // Variant images
+                $("#productImages").empty(); // clear old rows
+                data.productimages.forEach(function (variant) {
+                    const row = `
+                        <div class="row g-2 mb-2 image-row">
+                            <input type="hidden" name="image_id[]" value="${variant.id}">
+                            <input type="hidden" name="existing_image_url[]" value="${variant.image || ''}">
+                            <div class="col-md-4">
+                                <input type="text" name="image_name[]" class="form-control" 
+                                       value="${variant.name}" placeholder="Variant Name" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="file" name="image_file[]" class="form-control image-input" accept="image/*">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center preview-container">
+                                ${variant.image 
+                                    ? `<img src="${variant.image}" class="img-thumbnail" width="80">`
+                                    : `<span class="text-muted">No Image</span>`}
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger remove-row">&times;</button>
+                            </div>
+                        </div>`;
+                    $("#productImages").append(row);
+                });
+
+                // Show modal
+                $("#modalTitle").text("Edit Product");
+                $("#productModal").modal("show");
+            },
+            error: function (xhr) {
+                alert("Failed to load product details!");
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+    // 👉 Add new variant image row
+    $("#addImage").click(function () {
+        const newRow = `
+            <div class="row g-2 mb-2 image-row">
+                <div class="col-md-4">
+                    <input type="text" name="image_name[]" class="form-control" placeholder="Variant Name" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="file" name="image_file[]" class="form-control image-input" accept="image/*" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-center preview-container">
+                    <span class="text-muted">No Image</span>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-row">&times;</button>
+                </div>
+            </div>`;
+        $("#productImages").append(newRow);
+    });
+
+    // 👉 Remove row
+    $(document).on("click", ".remove-row", function () {
+        $(this).closest(".image-row").remove();
+    });
+
+    // 👉 Submit form (POST new / PUT update)
+    $("#productForm").submit(function (e) {
+        e.preventDefault();
+
+        const id = $("#product_id").val();
+        const url = id ? `/products/${id}/` : `/products/`;
+        const method = id ? "PUT" : "POST"; // Or PATCH if your backend prefers
+
+        let formData = new FormData(this);
+
+        // If cover image is displayed but not changed, add the existing URL
+        if ($("#coverPhotoPreview").attr("src")) {
+            formData.append("existing_coverphoto", $("#coverPhotoPreview").attr("src"));
+        }
+
+        // For variant images: if no file chosen, keep old image url
+        $("#productImages .image-row").each(function (index, row) {
+            let fileInput = $(row).find('input[name="image_file[]"]')[0];
+            let existingUrl = $(row).find('input[name="existing_image_url[]"]').val();
+            if (fileInput && fileInput.files.length === 0 && existingUrl) {
+                formData.append("keep_existing_images[]", existingUrl);
+            }
+        });
+
+        $.ajax({
+            url: url,
+            type: method,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert("Product saved successfully!");
+                $("#productModal").modal("hide");
+                location.reload();
+            },
+            error: function (xhr) {
+                alert("Failed to save product!");
+                console.error(xhr.responseText);
+            },
+        });
+    });
+});
+</script> -->
+
+<!-- // 👉 Edit product (GET details + open modal) -->
+<!-- <script>
+    $(document).ready(function () {
+    
+    $(document).on("click", ".editBtn", function () {
+        let productId = $(this).data("id");
+
+        $.ajax({
+            url: `/products/${productId}/`,
+            type: "GET",
+            success: function (data) {
+                // Fill form fields
+                $("#product_id").val(data.id);
+                $("#id_name").val(data.name);
+                $("#id_subcategory").val(data.sub_category.id).trigger("change");
+                $("#id_price").val(data.price);
+                $("#id_discount").val(data.discount);
+                $("#id_afterdiscountprice").val(data.afterdiscountprice);
+                $("#id_description1").val(data.description1);
+                $("#id_description2").val(data.description2);
+                $("#trending").prop("checked", data.trending);
+                $("#new_arrival").prop("checked", data.newArriable || data.new_arrival);
+
+                // Cover photo preview
+                if (data.coverphoto) {
+                    const baseUrl = "http://127.0.0.1:8000/";
+                    const coverUrl = data.coverphoto.startsWith("http") ? data.coverphoto : baseUrl + data.coverphoto;
+                    $("#coverPhotoPreview").attr("src", coverUrl).show();
+                    $("#coverphotoInput").data("existing-url", coverUrl);
+                } else {
+                    $("#coverPhotoPreview").hide().attr("src", "");
+                }
+
+                // Variant images
+                $("#productImages").empty();
+                data.productimages.forEach(function (variant) {
+                    const row = `
+                        <div class="row g-2 mb-2 image-row">
+                            <input type="hidden" name="image_id[]" value="${variant.id}">
+                            <input type="hidden" name="existing_image_url[]" value="${variant.image || ''}">
+                            <div class="col-md-4">
+                                <input type="text" name="image_name[]" class="form-control" 
+                                       value="${variant.name}" placeholder="Variant Name" required>
+                            </div>
+                            <div class="col-md-4">
+                                <input type="file" name="image_file[]" class="form-control image-input" accept="image/*">
+                            </div>
+                            <div class="col-md-2 d-flex align-items-center preview-container">
+                                ${variant.image 
+                                    ? `<img src="${variant.image}" class="img-thumbnail" width="80">`
+                                    : `<span class="text-muted">No Image</span>`}
+                            </div>
+                            <div class="col-md-2">
+                                <button type="button" class="btn btn-danger remove-row">&times;</button>
+                            </div>
+                        </div>`;
+                    $("#productImages").append(row);
+                });
+
+                // Show modal
+                $("#modalTitle").text("Edit Product");
+                $("#productModal").modal("show");
+            },
+            error: function (xhr) {
+                alert("Failed to load product details!");
+                console.error(xhr.responseText);
+            }
+        });
+    });
+
+    // 👉 Add new variant image row
+    $("#addImage").click(function () {
+        const newRow = `
+            <div class="row g-2 mb-2 image-row">
+                <div class="col-md-4">
+                    <input type="text" name="image_name[]" class="form-control" placeholder="Variant Name" required>
+                </div>
+                <div class="col-md-4">
+                    <input type="file" name="image_file[]" class="form-control image-input" accept="image/*" required>
+                </div>
+                <div class="col-md-2 d-flex align-items-center preview-container">
+                    <span class="text-muted">No Image</span>
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="btn btn-danger remove-row">&times;</button>
+                </div>
+            </div>`;
+        $("#productImages").append(newRow);
+    });
+
+    // 👉 Remove row
+    $(document).on("click", ".remove-row", function () {
+        $(this).closest(".image-row").remove();
+    });
+
+    // 👉 Submit form (PUT update)
+    $("#productForm").submit(function (e) {
+        e.preventDefault();
+
+        const productId = $("#product_id").val();
+        if (!productId) return alert("No product selected!");
+
+        const url = `/products/${productId}/`;
+        const method = "PUT";
+
+        let formData = new FormData(this);
+
+        // Cover image: যদি file না choose করা হয়, existing URL পাঠাও
+        let coverInput = $("#coverPhotoInput")[0];
+        if (coverInput.files.length === 0) {
+            let existingCoverUrl = $("#coverphotoInput").data("existing-url");
+            if (existingCoverUrl) {
+                formData.append("coverphoto_url", existingCoverUrl);
+            }
+        }
+
+        // Variant images: existing images URL পাঠাও যদি নতুন file না select করা হয়
+        $("#productImages .image-row").each(function () {
+            let fileInput = $(this).find('input[name="image_file[]"]')[0];
+            let existingUrl = $(this).find('input[name="existing_image_url[]"]').val();
+            if (fileInput && fileInput.files.length === 0 && existingUrl) {
+                formData.append("existing_variant_urls[]", existingUrl);
+            }
+        });
+
+        $.ajax({
+            url: url,
+            type: method,
+            data: formData,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                alert("Product updated successfully!");
+                $("#productModal").modal("hide");
+                location.reload();
+            },
+            error: function (xhr) {
+                alert("Failed to update product!");
+                console.error(xhr.responseText);
+            }
+        });
+    });
+});
+
+</script> -->
+
+
+
+
+{% endblock %}
