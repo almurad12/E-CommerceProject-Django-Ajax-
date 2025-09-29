@@ -16,12 +16,21 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 ##subcategory
+# class SubCategorySerializer(serializers.ModelSerializer):
+#     category_name = serializers.CharField(source='category.name', read_only=True)
+
+#     class Meta:
+#         model = sub_category
+#         fields = ['id', 'name', 'category', 'category_name']
 class SubCategorySerializer(serializers.ModelSerializer):
-    category_name = serializers.CharField(source='category.name', read_only=True)
+    category_name = serializers.SerializerMethodField()
 
     class Meta:
         model = sub_category
         fields = ['id', 'name', 'category', 'category_name']
+
+    def get_category_name(self, obj):
+        return obj.category.name if obj.category else ""
 
 ##slider serializers
 class SliderItemSerializer(serializers.ModelSerializer):
@@ -31,7 +40,8 @@ class SliderItemSerializer(serializers.ModelSerializer):
 
 
 ###product Image and product serializer crud together
-class SubCategorySerializer(serializers.ModelSerializer):
+##this serializer only for product
+class SubCategorySerializerImg(serializers.ModelSerializer):
     class Meta:
         model = sub_category
         fields = ['id', 'name']  # Include whatever fields you need
@@ -46,7 +56,7 @@ class ProductImageSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     # nested read
     productimages = ProductImageSerializer(many=True, read_only=True)
-    sub_category = SubCategorySerializer(read_only=True)
+    sub_category = SubCategorySerializerImg(read_only=True)
 
     # nested write
     new_images = ProductImageSerializer(many=True, write_only=True, required=False)

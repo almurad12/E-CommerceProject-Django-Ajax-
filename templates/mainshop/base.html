@@ -127,14 +127,14 @@
                 <!-- Right Icons -->
                 <div class="d-flex gap-2 navbar-icons" id="navbarRightIcon">
                     <!-- Wishlist -->
-                    <a href="#" class="position-relative my-auto">
+                    <a href="#" class="position-relative my-auto" id="watchlistButton">
                         <i class="bi bi-heart" style="font-size: 1.7rem; color: #45595b !important;"
                             data-bs-toggle="offcanvas" data-bs-target="#watchlistSidebar"
                             aria-controls="offcanvasRight"></i>
-                        <!-- <span id="cartMenuValue"
+                        <span id="wishlist-count"
                             class="position-absolute bg-secondary rounded-circle d-flex align-items-center justify-content-center text-dark px-1"
-                            style="top: -1px; left: 16px; height: 16px; min-width: 16px; font-size: 11px;">
-                        </span> -->
+                            style="top: -1px; left: 16px; height: 16px; min-width: 16px; font-size: 11px;">0
+                        </span>
                     </a>
                     <!-- Cart -->
                     <a href="#" class="position-relative my-auto">
@@ -382,7 +382,7 @@
 
     <!-- ajax watchlist -->
     <!-- ajax watchlist -->
-    <div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="watchlistSidebar"
+    <!-- <div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="watchlistSidebar"
         style="width: 265px; height: 90%;">
         <div class="offcanvas-header">
             <h5 class="offcanvas-title">Watchlist Cart</h5>
@@ -396,65 +396,11 @@
                 </a>
             </div>
             <hr>
-
-            <!-- <div class="mb-4">
-                <p class="mb-1 fw-bold">Watchlist</p>
-                <p class="mb-0 text-muted">Watchlist Item</p>
-            </div> -->
-
-            <!-- Dynamic product list -->
             <div id="wishlist-items"></div>
         </div>
     </div>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <!-- <script>
-        $(document).ready(function () {
-            function loadWishlist() {
-                $.get("/showcookielist/", function (data) {
-                    // count update
-                    $("#wishlist-count").text(data.count);
-
-                    // clear old items
-                    $("#wishlist-items").empty();
-
-                    // loop through products
-                    data.products.forEach(function (p) {
-                        let card = `
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="d-flex align-items-center">
-                                <img src="${p.image}" 
-                                    class="img-fluid rounded-3" alt="${p.name}" style="width: 65px;">
-                                <div class="ms-3 flex-grow-1">
-                                    <p class="mb-1 fw-bold">${p.name}</p>
-                                    <p class="mb-0 text-muted">Price: $${p.price}</p>
-                                </div>
-                                <a href="#" class="text-danger remove-item" data-id="${p.id}">
-                                    <i class="fas fa-trash-alt"></i>
-                                </a>
-                            </div>
-                        </div>
-                    </div>`;
-                        $("#wishlist-items").append(card);
-                    });
-                });
-            }
-
-            // যখন offcanvas খোলা হবে তখন লোড করবে
-            $('#watchlistSidebar').on('show.bs.offcanvas', function () {
-                loadWishlist();
-            });
-
-            // Remove button handle
-            $(document).on("click", ".remove-item", function (e) {
-                e.preventDefault();
-                let productId = $(this).data("id");
-                console.log("Remove product id:", productId);
-                // এখানে AJAX দিয়ে remove করতে পারবে (cookie/session update করে)
-                // তারপর loadWishlist() আবার call করো
-            });
-        });
-    </script> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
+    
 
     {% include 'mainshop/watchlist.html' %}
 

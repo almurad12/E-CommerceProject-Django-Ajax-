@@ -17,8 +17,9 @@ class category(models.Model):
 class sub_category(models.Model):
     name = models.CharField(max_length=30, unique=True)
     category = models.ForeignKey(category,on_delete=models.CASCADE,related_name='category')
+   
     def __str__(self):
-        return self.category.name+" - "+self.name
+        return f"{self.category.name} - {self.name}"
     
 #slider
 class sliderItem(models.Model):

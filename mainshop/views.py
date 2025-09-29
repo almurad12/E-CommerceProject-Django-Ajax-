@@ -16,6 +16,7 @@ from rest_framework import viewsets
 from rest_framework.exceptions import NotFound
 from rest_framework import status
 from django.shortcuts import get_object_or_404
+from django.utils.decorators import method_decorator
 # Create your views here.
 # def base(request):
 #      return render(request,'mainshop/base.html',{'slides': slides})
@@ -45,13 +46,7 @@ def shopSingleproduct(request,id):
         print(img.image)
     return render(request,'mainshop/singleproduct1.html',{'product':product,'productImage': productImage})
 
-# def shopAllproduct(request):
-#     products = Product.objects.all().order_by("id") 
 
-#     paginator = Paginator(products, 1) 
-#     page_number = request.GET.get("page",1)
-#     page_obj = paginator.get_page(page_number)
-#     return render(request, "mainshop/allproduct.html", {"page_obj": page_obj})
 
 ##rest view for all product
 class ShopList(APIView):
@@ -84,20 +79,7 @@ class ShopList(APIView):
 
         return paginator.get_paginated_response(serializer.data)
     
-# def searchProduct(request):
-#     search_query = request.GET.get("search", "")
-#     products = Product.objects.filter(name__icontains=search_query)
 
-#     data = [{
-#         "id": p.id,
-#         "name": p.name,
-#         "price": p.price,
-#         "discount": p.discount,
-#         "afterdiscountprice": p.afterdiscountprice,
-#         "coverphoto": p.coverphoto.url if p.coverphoto else "",
-#     } for p in products]
-
-#     return JsonResponse(data, safe=False)
 
 class SearchProduct(APIView):
     def get(self, request):
@@ -106,76 +88,7 @@ class SearchProduct(APIView):
         serializer = ProductSerializer(products, many=True)
         return Response(serializer.data)
 
-# def watchlist_add_cookie(request):
-#    product_id = request.GET.get("product_id")   # ✅ use GET here
-#    product = Product.objects.get(id=product_id)
-#    print(product)
-#    print(product.name)
-#    print(product.afterdiscountprice)
-#    return JsonResponse({"product_id": product_id})
-
-
-# def watchlist_add_cookie(request):
-#     product_id = request.GET.get("product_id")  # or POST
-#     if not product_id:
-#         return JsonResponse({"error": "No product_id provided"}, status=400)
-
-#     # Get existing cookie
-#     product_cookie = request.COOKIES.get("product_ids")
-#     # print(product_cookie)
-#     for x in product_cookie:
-#         print(x)
-    
-#     if product_cookie:
-#         # convert JSON string to Python list
-#         product_list = json.loads(product_cookie)
-#         print("product list is",product_list)
-#         if product_id in product_list:
-#             return JsonResponse({"status": "already exists", "product_ids": product_list})
-#         else:
-#             product_list.append(product_id)
-#     else:
-#         product_list = [product_id]
-
-#     response = JsonResponse({"status": "added", "product_ids": product_list})
-#     # set cookie as JSON string
-#     response.set_cookie("product_ids", json.dumps(product_list), max_age=3600*24*7)  # 7 days
-#     print(response)
-#     return JsonResponse({"product_id": product_id})
-
-# def watchlist_add_cookie(request):
-#     product_id = request.GET.get("product_id")  # or POST
-#     if not product_id:
-#         return JsonResponse({"error": "No product_id provided"}, status=400)
-
-#     # Get existing cookie
-#     product_cookie = request.COOKIES.get("product_ids")
-
-#     if product_cookie:
-#         # convert JSON string to Python list
-#         product_list = json.loads(product_cookie)
-#         print("product list is", product_list)
-
-#         if product_id in product_list:
-#             return JsonResponse({"status": "already exists", "product_ids": product_list})
-#         else:
-#             product =  Product.objects.filter(id=product_id)
-#             print(product.name)
-#             # product_list.append(product_id)
-#     else:
-#         product_list = [product_id]
-
-#     # ✅ Use ONE response and set cookie on it
-#     response = JsonResponse({
-#         "status": "added",
-#         "product_id": product_id,
-#         "product_ids": product_list
-#     })
-
-#     # set cookie as JSON string
-#     response.set_cookie("product_ids", json.dumps(product_list), max_age=3600*24*7)  # 7 days
-#     return response
-
+'''
 def watchlist_add_cookie(request):
     product_id = request.GET.get("product_id")
     if not product_id:
@@ -183,9 +96,11 @@ def watchlist_add_cookie(request):
 
     # Get existing cookie
     product_cookie = request.COOKIES.get("product_ids")
+    # print(product_cookie)
 
     if product_cookie:
         product_list = json.loads(product_cookie)
+        print("ppp",product_list)
     else:
         product_list = []
 
@@ -224,8 +139,6 @@ def watchlist_add_cookie(request):
 
 def show_cookies(request):
     product_cookie = request.COOKIES.get("wishlist")
-    print("product cookie is", product_cookie)
-
     if product_cookie:
         try:
             product_ids = json.loads(product_cookie)  # cookie থেকে list of ids
@@ -251,39 +164,6 @@ def show_cookies(request):
 
     return JsonResponse({"products": product_data,
                          "cartitem":products.count()})
-
-# remove watchlist
-# def remove_from_wishlist(request):
-#     product_id = request.GET.get("product_id")   # AJAX থেকে আসবে
-#     print(product_id)
-#     if not product_id:
-#         return JsonResponse({"error": "No product_id provided"}, status=400)
-
-#     # cookie থেকে data পড়া
-#     wishlist_cookie = request.COOKIES.get("wishlist")
-
-#     if wishlist_cookie:
-#         try:
-#             wishlist = json.loads(wishlist_cookie)
-#         except json.JSONDecodeError:
-#             wishlist = []
-#     else:
-#         wishlist = []
-
-#     # যদি product id list এর মধ্যে থাকে তাহলে remove করো
-#     if int(product_id) in wishlist:
-#         wishlist.remove(int(product_id))
-
-#     response = JsonResponse({
-#         "message": "Removed successfully",
-#         "wishlist": wishlist,
-#         "count": len(wishlist)
-#     })
-
-#     # cookie update করা
-#     response.set_cookie("wishlist", json.dumps(wishlist))
-
-#     return response
 
 
 def remove_from_wishlist(request):
@@ -316,7 +196,104 @@ def remove_from_wishlist(request):
     )
 
     return response
+'''
+# updated watchlist
+# @csrf_exempt 
+class WatchlistAPI(APIView):
+    cookie_name = "product_ids"
 
+    def get_watchlist(self, request):
+        """Helper to load watchlist from cookie"""
+        cookie_data = request.COOKIES.get(self.cookie_name, "[]")
+        try:
+            raw_data = json.loads(cookie_data)
+            watchlist = []
+            for x in raw_data:
+                if isinstance(x, dict) and "product_id" in x:
+                    watchlist.append(int(x["product_id"]))
+                else:
+                    watchlist.append(int(x))
+            return watchlist
+        except (json.JSONDecodeError, ValueError, TypeError):
+            return []
+
+    def set_watchlist_cookie(self, response, watchlist):
+        """Helper to update cookie"""
+        response.set_cookie(
+            key=self.cookie_name,
+            value=json.dumps(watchlist),  # ✅ always save only a list of ints
+            max_age=60 * 60 * 24 * 7,     # 7 days
+            path="/",
+            samesite="Lax",
+            secure=False  # set True in production (HTTPS)
+        )
+        return response
+
+    # ✅ Show watchlist with product details
+    def get(self, request):
+        product_ids = self.get_watchlist(request)
+        products = Product.objects.filter(id__in=product_ids)
+
+        product_data = [
+            {
+                "id": p.id,
+                "name": p.name,
+                "price": p.afterdiscountprice,
+                "image": p.coverphoto.url if p.coverphoto else None,
+                "url": f"/shop/{p.id}/"
+            }
+            for p in products
+        ]
+
+        return Response({
+            "products": product_data,
+            "cartitem": products.count()
+        })
+
+    # ✅ Add to watchlist
+    def post(self, request):
+        product_id = request.data.get("product_id")
+        if not product_id:
+            return Response({"error": "No product_id provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            product_id = int(product_id)
+        except ValueError:
+            return Response({"error": "Invalid product_id"}, status=status.HTTP_400_BAD_REQUEST)
+
+        watchlist = self.get_watchlist(request)
+        if product_id not in watchlist:
+            watchlist.append(product_id)
+
+        response = Response({
+            "message": "Added successfully",
+            "watchlist": watchlist,
+            "count": len(watchlist)
+        })
+        return self.set_watchlist_cookie(response, watchlist)
+
+    # ✅ Remove from watchlist
+    def delete(self, request):
+        product_id = request.data.get("product_id")
+        if not product_id:
+            return Response({"error": "No product_id provided"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            product_id = int(product_id)
+        except ValueError:
+            return Response({"error": "Invalid product_id"}, status=status.HTTP_400_BAD_REQUEST)
+
+        watchlist = self.get_watchlist(request)
+        if product_id in watchlist:
+            watchlist.remove(product_id)
+
+        response = Response({
+            "message": "Removed successfully",
+            "watchlist": watchlist,
+            "count": len(watchlist)
+        })
+        return self.set_watchlist_cookie(response, watchlist)
+# updated watchlist end
 
 # for cart
 def add_to_cart(request):
@@ -452,7 +429,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 #         if request.accepted_renderer.format == 'html':
 #             return Response(template_name='admin_another/subcategory.html')
         # return Response(serializer.data)
-
+'''
 class SubCategoryViewSet(viewsets.ModelViewSet):
     queryset = sub_category.objects.select_related('category').all()
     serializer_class = SubCategorySerializer
@@ -464,7 +441,26 @@ class SubCategoryViewSet(viewsets.ModelViewSet):
         if request.accepted_renderer.format == 'html':
             return Response(template_name='admin_another/subcategory.html')
         return Response(serializer.data)
+    '''
+    # Force JSON response for DataTables
     
+
+class SubCategoryViewSet(viewsets.ModelViewSet):
+    queryset = sub_category.objects.select_related('category').all()
+    serializer_class = SubCategorySerializer
+    renderer_classes = [JSONRenderer, TemplateHTMLRenderer]
+    # permission_classes = [IsAdminUser]
+
+    def list(self, request, *args, **kwargs):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        # Force JSON response for AJAX/DataTables
+        if request.headers.get("x-requested-with") == "XMLHttpRequest":
+            return Response(serializer.data)
+
+        # Otherwise return template
+        return Response(template_name="admin_another/subcategory.html")
 
 class SliderItemViewSet(viewsets.ModelViewSet):
     queryset = sliderItem.objects.all()
@@ -507,100 +503,6 @@ class ProductImageViewSet(viewsets.ModelViewSet):
             raise NotFound("Product not found")
         serializer.save(product=product)
 
-# ###########
-
-# class ProductViewSet(viewsets.ModelViewSet):
-#     queryset = Product.objects.all().prefetch_related("productimages")
-#     serializer_class = ProductSerializer
-#     renderer_classes = [JSONRenderer, TemplateHTMLRenderer]
-
-#     def list(self, request, *args, **kwargs):
-#         queryset = self.get_queryset()
-#         serializer = self.get_serializer(queryset, many=True)
-
-#         if request.accepted_renderer.format == 'html':
-#             return Response({'products': serializer.data}, template_name='admin_another/product.html')
-#         return Response(serializer.data)
-
-#     def retrieve(self, request, *args, **kwargs):
-#         product = self.get_object()
-#         serializer = self.get_serializer(product)
-
-#         if request.accepted_renderer.format == 'html':
-#             return Response({'product': serializer.data}, template_name='admin_another/product.html')
-#         return Response(serializer.data)
-
-'''
-class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all().prefetch_related("productimages")
-    serializer_class = ProductSerializer
-    renderer_classes = [JSONRenderer, TemplateHTMLRenderer]
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-
-        # Get all subcategories
-        subcategories = sub_category.objects.all()
-        subcategory_serializer = SubCategorySerializer(subcategories, many=True)
-
-        context = {
-            'products': serializer.data,
-            'subcategories': subcategory_serializer.data
-        }
-
-        if request.accepted_renderer.format == 'html':
-            return Response(context, template_name='admin_another/product.html')
-        return Response(context)
-
-    def retrieve(self, request, *args, **kwargs):
-        product = self.get_object()
-        serializer = self.get_serializer(product)
-
-        # Get all subcategories
-        subcategories = sub_category.objects.all()
-        subcategory_serializer = SubCategorySerializer(subcategories, many=True)
-
-        context = {
-            'product': serializer.data,
-            'subcategories': subcategory_serializer.data
-        }
-
-        if request.accepted_renderer.format == 'html':
-            return Response(context, template_name='admin_another/product.html')
-        return Response(context)
-    
-class ProductImageViewSet(viewsets.ModelViewSet):
-    serializer_class = ProductImageSerializer
-    renderer_classes = [JSONRenderer, TemplateHTMLRenderer]
-
-    def get_queryset(self):
-        product_id = self.kwargs.get('product_pk')
-        try:
-            product = Product.objects.get(pk=product_id)
-        except Product.DoesNotExist:
-            raise NotFound("Product not found")
-        return product.productimages.all()
-
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-
-        if request.accepted_renderer.format == 'html':
-            return Response({'images': serializer.data}, template_name='products/productimage_list.html')
-        return Response(serializer.data)
-
-    def perform_create(self, serializer):
-        product_id = self.kwargs.get('product_pk')
-        try:
-            product = Product.objects.get(pk=product_id)
-        except Product.DoesNotExist:
-            raise NotFound("Product not found")
-        serializer.save(product=product)
-'''
-
-
-
 
 
 @csrf_exempt
@@ -641,41 +543,6 @@ class ProductListAPIView(APIView):
         return Response({"results": serializer.data})
     
 
-
-# class ProductDetailAPIView(APIView):
-
-#     # Get a single product by ID
-#     def get(self, request, pk, *args, **kwargs):
-#         product = get_object_or_404(
-#             Product.objects.select_related("sub_category").prefetch_related("productimages"),
-#             pk=pk
-#         )
-#         serializer = ProductSerializer(product)
-#         return Response(serializer.data, status=status.HTTP_200_OK)
-
-#     # Update product
-#     def put(self, request, pk, *args, **kwargs):
-#         product = get_object_or_404(Product, pk=pk)
-#         serializer = ProductSerializer(product, data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     # Partial update (if needed)
-#     def patch(self, request, pk, *args, **kwargs):
-#         product = get_object_or_404(Product, pk=pk)
-#         serializer = ProductSerializer(product, data=request.data, partial=True)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-#     # Delete product
-#     def delete(self, request, pk, *args, **kwargs):
-#         product = get_object_or_404(Product, pk=pk)
-#         product.delete()
-#         return Response({"message": "Product deleted successfully!"}, status=status.HTTP_204_NO_CONTENT)
 
 class ProductDetailAPIView(APIView):
 

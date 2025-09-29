@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     # 'shop',
     'rest_framework',
+    "drf_yasg",
     'shop1',
     'mainshop'
 ]

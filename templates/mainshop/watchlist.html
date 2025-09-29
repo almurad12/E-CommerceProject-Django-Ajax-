@@ -1,162 +1,159 @@
+<!-- wishlist -->
+<script>
+function ensureWishlistBadge() {
+    if ($("#watchlistButton .wishlist-badge").length === 0) {
+        $("#watchlistButton").append(`
+            <span class="wishlist-badge position-absolute bg-secondary rounded-circle 
+                         d-flex align-items-center justify-content-center text-dark px-1"
+                  style="top: -1px; left: 16px; height: 16px; min-width: 16px; font-size: 11px;">
+                0
+            </span>
+        `);
+    }
+}
+</script>
+
+<div class="offcanvas offcanvas-end text-dark" tabindex="-1" id="watchlistSidebar"
+     style="width: 265px; height: 90%;">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Watchlist Cart</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+
+    <div class="offcanvas-body">
+        <div class="mb-3" data-bs-dismiss="offcanvas">
+            <a href="#" class="text-decoration-none text-body">
+                <i class="fas fa-long-arrow-alt-left me-2"></i>Continue shopping
+            </a>
+        </div>
+        <hr>
+        <div id="wishlist-items"></div>
+    </div>
+</div>
+<!-- wishlist end -->
+
 <!-- add to watchlist alert showing modal -->
 <div class="modal fade" id="addToWatchlistModal" tabindex="-1">
-    <div class="modal-dialog modal-sm modal-dialog-centered"> <!-- small + centered -->
+    <div class="modal-dialog modal-sm modal-dialog-centered">
         <div class="modal-content text-center shadow-lg border-0 rounded-4">
-
             <div class="modal-body p-4">
-                <!-- Success Icon -->
                 <div class="mb-3">
                     <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
                 </div>
-
-                <!-- Title -->
                 <h5 class="fw-bold text-success">Product Added In Watchlist!</h5>
                 <button class="btn btn-success w-100 rounded-pill" data-bs-dismiss="modal">
                     <i class="bi bi-check2-circle me-1"></i> Okay
                 </button>
             </div>
-
         </div>
     </div>
 </div>
 <!-- add to watchlist alert showing modal -->
 
-
-
 <script>
-    $(document).ready(function () {
+$(document).ready(function () {
 
-        // ---- Load Wishlist ----
-        function loadWishlist() {
-            $.get("/showcookielist/", function (data) {
-                //  console.log("data is",data.cartitem)
-                // count update
-                // $("#wishlist-count").text(data.count);
-                // 
-                // $("#cartMenuValue").text(Number(data.count) || 10);
-                // clear old items
-                $("#wishlist-items").empty();
+    // ---- CSRF Setup ----
+    function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    $.ajaxSetup({ headers: { "X-CSRFToken": csrftoken } });
 
-                // loop through products
-                data.products.forEach(function (p) {
-                    let card = `
-                        <div class="card mb-3 shadow-sm border-0 rounded-3">
-                            <div class="card-body p-2">
-                                <div class="d-flex align-items-center">
-                                <!-- Product Image -->
-                                <img src="${p.image}"
-                                    class="img-fluid rounded-3 border" 
-                                    alt="${p.name}"
-                                    style="width: 65px; height: 65px; object-fit: cover;">
+    // ---- Load Wishlist from API ----
+    function loadWishlist() {
+        $.get("/api/watchlist/", function (data) {
+            ensureWishlistBadge();
+            $(".wishlist-badge").text(data.cartitem || 0);
 
-                                <!-- Product Details -->
+            $("#wishlist-items").empty();
+            data.products.forEach(function (p) {
+                let card = `
+                    <div class="card mb-3 shadow-sm border-0 rounded-3">
+                        <div class="card-body p-2">
+                            <div class="d-flex align-items-center">
+                                <img src="${p.image || '/static/img/no-image.png'}"
+                                     class="img-fluid rounded-3 border" 
+                                     alt="${p.name}"
+                                     style="width: 65px; height: 65px; object-fit: cover;">
                                 <div class="ms-3 flex-grow-1">
-                                    <a href="/shop/${p.id}" class="text-dark text-bold">${p.name}</a>
-                                    <br>
-                                    <small class="text-bold">Price: ${p.price}</small>
+                                    <a href="${p.url}" class="text-dark fw-bold">${p.name}</a><br>
+                                    <small class="text-muted">Price: ${p.price}</small>
                                 </div>
-
-                                <!-- Remove Button -->
                                 <button class="btn btn-sm btn-outline-danger remove-item" data-id="${p.id}">
                                     <i class="fas fa-trash-alt"></i>
                                 </button>
-                                </div>
                             </div>
-                    </div>`
-                    $("#wishlist-items").append(card);
-                });
-            });
-        }
-
-        // ---- যখন offcanvas খোলা হবে তখন লোড করবে ----
-        $('#watchlistSidebar').on('show.bs.offcanvas', function () {
-            loadWishlist();
-        });
-
-        // ---- Remove button handle ----
-        $(document).on("click", ".remove-item", function (e) {
-            e.preventDefault();
-            // let productId = $(this).data("id");
-            let productId = parseInt($(this).data("id")); // ✅ ensure integer
-            console.log("Remove product id:", productId);
-            console.log(typeof productId);
-
-            $.ajax({
-                url: "/wishlist/remove/",
-                type: "GET",
-                data: { product_id: productId },
-                success: function (response) {
-                    console.log("Removed:", response);
-                    loadWishlist(); // refresh after remove
-                },
-                error: function (xhr, status, error) {
-                    console.error("Error removing:", error);
-                }
+                        </div>
+                    </div>`;
+                $("#wishlist-items").append(card);
             });
         });
+    }
+
+    // ✅ Load immediately on page load
+    loadWishlist();
+
+    // ---- Sidebar open event ----
+    $('#watchlistSidebar').on('show.bs.offcanvas', function () {
+        loadWishlist();
     });
-    // add wishlist
-    //for add to wishlist
-    function getCookie(name) {
-        let cookieArr = document.cookie.split(";");
-        for (let i = 0; i < cookieArr.length; i++) {
-            let cookiePair = cookieArr[i].split("=");
-            let key = cookiePair[0].trim();
-            if (key === name) {
-                return decodeURIComponent(cookiePair[1]);
-            }
-        }
-        return null;
-    }
 
-    // add to watchlist modal show
-    function showAddToWatchlistModal() {
-        let modal = new bootstrap.Modal(document.getElementById("addToWatchlistModal"));
-        modal.show();
-    }
+    // ---- Remove button handler ----
+    $(document).on("click", ".remove-item", function (e) {
+        e.preventDefault();
+        const productId = Number($(this).data("id"));
 
-
-
-    function sendProductId(productId) {
-        console.log(productId);
-
-        // get existing cookie
-        let wishlist = [];
-        try {
-            wishlist = JSON.parse(getCookie("wishlist") || "[]");
-            if (!Array.isArray(wishlist)) {
-                wishlist = []; // reset if not an array
-            }
-        } catch (e) {
-            wishlist = []; // reset if JSON.parse fails
-        }
-
-        // check duplicate before adding
-        if (!wishlist.includes(productId)) {
-            wishlist.push(productId);
-            document.cookie = "wishlist=" + JSON.stringify(wishlist) + "; path=/";
-        }
-        // show bootstrap alert
-
-        // show bootstrap alert
         $.ajax({
-            url: "/watchlist/",
-            type: "GET",
-            data: { product_id: productId },
+            url: "/api/watchlist/",
+            type: "DELETE",
+            contentType: "application/json",
+            data: JSON.stringify({ product_id: productId }),
             success: function (response) {
-                console.log("Product saved:", response.product_id);
-                // alert("Product added watchlist!");
-                showAddToWatchlistModal()
-
-                // $("#wishlist-count").text(10);
-                // <div class="alert alert-success" role="alert">
-                //     This is a success alert—check it out!
-                // </div>
+                $(".wishlist-badge").text(response.count || 0);
+                loadWishlist();
             },
             error: function (xhr, status, error) {
-                console.error("Error:", error);
+                console.error("Error removing:", error, xhr.responseText);
             }
         });
-    }
-    // add wishlist
+    });
+
+    // ---- Add to wishlist ----
+    window.sendProductId = function (productId) {
+        const pid = Number(productId);
+
+        $.ajax({
+            url: "/api/watchlist/",
+            type: "POST",
+            contentType: "application/json",
+            data: JSON.stringify({ product_id: pid }),
+            success: function (response) {
+                $(".wishlist-badge").text(response.count || 0);
+                showAddToWatchlistModal();
+            },
+            error: function (xhr, status, error) {
+                console.error("Error adding:", error, xhr.responseText);
+            }
+        });
+    };
+
+});
+
+// ---- Show bootstrap modal ----
+function showAddToWatchlistModal() {
+    const modal = new bootstrap.Modal(document.getElementById("addToWatchlistModal"));
+    modal.show();
+}
 </script>

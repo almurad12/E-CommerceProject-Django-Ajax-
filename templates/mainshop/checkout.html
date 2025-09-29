@@ -197,21 +197,42 @@ function loadCart() {
             } else {
                 cart.items.forEach(item => {
                     rows += `
-                        <tr>
-                            <td class="d-flex flex-column align-items-center gap-1">
-                                <img src="${item.image_url}" alt="${item.product_name}" class="img-fluid rounded" style="width:60px;height:60px;object-fit:cover;">
-                                <span class="text-truncate" style="max-width:200px;">${item.product_name}</span>
-                                <span class="badge bg-primary">Variant: ${item.variant}</span>
-                                <span class="badge bg-dark">Quantity: ${item.quantity}</span>
-                                <span class="badge bg-primary">Qty × Price = ${item.quantity} × ${item.price}</span>
-                                <span class="badge bg-dark">Total: ${item.product_total}</span>
-                            </td>
-                            <td>
-                                <button class="btn btn-danger btn-sm rounded-circle" onclick="removeItem(${item.product_id}, ${item.image_id})">
-                                    <i class="bi bi-trash3"></i>
-                                </button>
-                            </td>
-                        </tr>
+            <tr>
+                <td>
+                    <div class="d-flex align-items-center gap-3 p-2 rounded shadow-sm bg-light">
+                    <!-- Product Image -->
+                    <img src="${item.image_url}" alt="${item.product_name}"
+                        class="rounded border"
+                        style="width:70px; height:70px; object-fit:cover;">
+
+                    <!-- Product Details -->
+                    <div class="d-flex flex-column align-items-start">
+                        <strong class="text-dark text-truncate" style="max-width:200px;">
+                        ${item.product_name}
+                        </strong>
+                        
+                        <div class="d-flex flex-wrap gap-1 mt-1">
+                        <span class="badge bg-success">Variant: ${item.variant}</span>
+                        <span class="badge bg-danger">Qty: ${item.quantity}</span>
+                        </div>
+
+                        <small class="text-muted mt-1">
+                        <span class="fw-bold">Price:</span> ${item.price} <br>
+                        <span class="fw-bold">Total:</span> ${item.product_total}
+                        </small>
+                    </div>
+                    </div>
+                </td>
+
+            <!-- Action -->
+            <td class="text-center ">
+                <button class="btn btn-outline-danger btn-sm rounded-circle shadow-sm"
+                        onclick="removeItem(${item.product_id}, ${item.image_id})">
+                <i class="bi bi-trash3"></i>
+                </button>
+            </td>
+        </tr>
+
                     `;
                 });
             }
