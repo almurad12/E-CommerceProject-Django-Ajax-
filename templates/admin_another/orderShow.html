@@ -1,0 +1,226 @@
+{% extends 'admin_another/adminbase.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h3 class="mb-3">Order List</h3>
+  <table id="orderTable" class="table table-striped table-hover w-100">
+    <thead class="table-dark">
+      <tr>
+        <th>Order Info</th>
+        <th>Order Products</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<!-- Order Details Modal -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Order Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="printableArea">
+        <h5 class="text-center fw-bold">Art & Craft - CrystaL</h5>
+        <div class="d-flex justify-content-between mb-3">
+          <p><strong>Order ID:</strong> <span id="orderId"></span></p>
+          <p><strong>Date:</strong> <span id="orderDate"></span></p>
+        </div>
+        <p><strong>Name:</strong> <span id="orderName"></span></p>
+        <p><strong>Address:</strong> <span id="orderAddress"></span></p>
+        <p><strong>District:</strong> <span id="orderDistrict"></span></p>
+        <p><strong>Thana:</strong> <span id="orderThana"></span></p>
+        <p><strong>Phone:</strong> <span id="orderPhone"></span></p>
+
+        <table class="table table-bordered mt-3">
+          <thead class="table-light">
+            <tr>
+              <th>Name</th>
+              <th>Price</th>
+              <th>Qty</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="orderItems"></tbody>
+          <tfoot>
+            <tr>
+              <td colspan="3" class="text-end fw-bold">Grand Total:</td>
+              <td id="orderGrandTotal" class="fw-bold"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-success" onclick="printOrder()">🖨 Print</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ✅ Include JS/CSS -->
+<link href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css" rel="stylesheet">
+<script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css" rel="stylesheet">
+
+{% block contentscript %}
+<script>
+$(document).ready(function() {
+
+  // ✅ Destroy existing DataTable before initializing
+  if ($.fn.DataTable.isDataTable('#orderTable')) {
+    $('#orderTable').DataTable().clear().destroy();
+  }
+
+  const table = $('#orderTable').DataTable({
+    ajax: { url: '/ordersdata/', dataSrc: '' },
+    columns: [
+      {
+        data: null,
+        render: function(data) {
+          const orderId = data.id || '—';
+          const name = data.address?.name || '—';
+          const address = data.address?.address || '—';
+          const phone = data.address?.phone || '—';
+          const district = data.address?.district || '—';
+          const thana = data.address?.thana || '—';
+          const time = data.formatted_date || new Date(data.created_at).toLocaleString();
+          const productTotal = data.order_products?.total?.subtotal || 0;
+          const fullTotal = data.order_products?.total?.grand_total || 0;
+
+          return `
+            <div class="p-2 border rounded-3 shadow-sm bg-light d-flex flex-column gap-1">
+              <p class="mb-0 fw-bold text-dark">🧾 Order ID: <span class="text-danger">${orderId}</span></p>
+              <p class="fw-bold text-danger mb-0">Product Total: ${productTotal} ৳</p>
+              <p class="fw-bold text-danger mb-0">Delivery Charge: 130 ৳</p>
+              <p class="fw-bold text-danger mb-0">Total: ${fullTotal} ৳</p>
+              <p class="mb-0 text-muted">👤 ${name}</p>
+              <p class="mb-0 text-muted"><i class="bi bi-geo-alt-fill text-dark me-1"></i>${address}</p>
+              <p class="mb-0 text-muted">📞 ${phone}</p>
+              <p class="mb-0 text-muted">🕒 ${time}</p>
+              <p class="small text-muted mb-0">District: ${district} | Thana: ${thana}</p>
+            </div>
+          `;
+        }
+      },
+      {
+        data: 'order_products.items',
+        render: function(items) {
+          if (!items || items.length === 0) return '—';
+          return items.map((item, i) => `
+            <div class="card shadow-sm border-0 rounded-3 mb-2" style="max-width: 450px;">
+              <div class="card-body p-2">
+                <div class="d-flex align-items-center gap-2 border-bottom pb-2">
+                  <span class="fw-bold text-dark">${i + 1}.</span>
+                  <img src="${item.image_url}" alt="${item.product_name}"
+                    style="width:50px;height:50px;object-fit:cover;border-radius:8px;border:1px solid #ddd;">
+                  <div>
+                    <p class="text-muted mb-1" style="font-size:0.8em;">${item.product_name}</p>
+                    <div class="d-flex flex-wrap gap-2">
+                      <span class="badge bg-success">Price: ${item.price}</span>
+                      <span class="badge bg-success">Qty: ${item.quantity}</span>
+                      <span class="badge bg-success">Variant: ${item.variant}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `).join('');
+        }
+      },
+      {
+        data: 'id',
+        render: function(id) {
+          return `
+            <button class="btn btn-sm btn-dark view-order-btn" data-id="${id}" data-bs-toggle="modal" data-bs-target="#exampleModal">View</button>
+            <button class="btn btn-sm btn-danger delete-order-btn" data-id="${id}">Delete</button>
+          `;
+        }
+      }
+    ]
+  });
+
+  // ✅ View Order
+  $('#orderTable').on('click', '.view-order-btn', function() {
+    const id = $(this).data('id');
+    fetch(`/ordershow/${id}/`)
+      .then(res => res.json())
+      .then(data => {
+        $('#orderId').text(data.id);
+        $('#orderDate').text(new Date(data.created_at).toLocaleString());
+        $('#orderName').text(data.address.name);
+        $('#orderAddress').text(data.address.address);
+        $('#orderDistrict').text(data.address.district);
+        $('#orderThana').text(data.address.thana);
+        $('#orderPhone').text(data.address.phone);
+        $('#orderItems').empty();
+
+        data.order_products.items.forEach(item => {
+          $('#orderItems').append(`
+            <tr>
+              <td>${item.product_name}</td>
+              <td>${item.price}</td>
+              <td>${item.quantity}</td>
+              <td>${item.product_total}</td>
+            </tr>
+          `);
+        });
+
+        $('#orderGrandTotal').text(data.order_products.total.grand_total);
+      });
+  });
+
+});
+
+//Delete Order
+//get cookie
+function getCookie(name) {
+  let cookieValue = null;
+  if (document.cookie && document.cookie !== '') {
+    const cookies = document.cookie.split(';');
+    for (let i = 0; i < cookies.length; i++) {
+      const cookie = cookies[i].trim();
+      if (cookie.substring(0, name.length + 1) === name + '=') {
+        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+        break;
+      }
+    }
+  }
+  return cookieValue;
+}
+
+$('#orderTable').on('click', '.delete-order-btn', function () {
+  const id = $(this).data('id');
+
+  if (confirm('⚠️ Are you sure you want to delete this order?')) {
+    fetch(`/ordersdata/${id}/`, {
+      method: 'DELETE',
+      headers: { 'X-CSRFToken': getCookie('csrftoken') },
+    })
+      .then((res) => {
+        if (res.ok) {
+          alert('✅ Order deleted successfully!');
+          $('#orderTable').DataTable().ajax.reload(null, false);
+        } else {
+          alert('❌ Failed to delete order.');
+        }
+      })
+      .catch((err) => console.error(err));
+  }
+});
+
+// ✅ Print Function
+function printOrder() {
+  const printContents = document.getElementById('printableArea').innerHTML;
+  const w = window.open('', '', 'height=600,width=800');
+  w.document.write('<html><head><title>Print Order</title></head><body>');
+  w.document.write(printContents);
+  w.document.write('</body></html>');
+  w.document.close();
+  w.print();
+}
+</script>
+{% endblock %}
+{% endblock %}

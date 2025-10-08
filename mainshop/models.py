@@ -107,6 +107,7 @@ class ProductImage(models.Model):
     
 
 ###order generate with date
+'''
 def generate_unique_custom_id():
     while True:
         # দিন-মাস-বছর (DD_MM_YY)
@@ -121,8 +122,25 @@ def generate_unique_custom_id():
         # Check in DB
         if not Product.objects.filter(id=new_id).exists():
             return new_id
+            '''
+def generate_unique_custom_id():
+    while True:
+        today = datetime.datetime.now()
+
+        # date part without underscore — example: 051025
+        date_str = today.strftime("%d%m%y")
+
+        # 5 random digits — example: 38472
+        random_digits = ''.join(random.choices(string.digits, k=5))
+
+        # combine and convert to integer
+        new_id = int(f"{date_str}{random_digits}")  # ✅ convert string to int
+
+        # check in DB for uniqueness
+        if not Order.objects.filter(id=new_id).exists():
+            return new_id
 class Order(models.Model):
-    id = models.CharField(
+    id = models.BigIntegerField(
         max_length=20,  # 8 (date) + 8 (random) = 16, buffer 20
         primary_key=True,
         default=generate_unique_custom_id,

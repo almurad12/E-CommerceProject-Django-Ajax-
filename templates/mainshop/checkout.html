@@ -2,10 +2,19 @@
 {% block content %}
 
 <div class="container my-5">
-    <h2 class="mb-0">Checkout</h2>
+    <!-- <h2 class="mb-0">Checkout</h2>
     <a href="{% url 'home' %}" class="btn btn-dark text-white pt-2">
             <i class="bi bi-arrow-left me-1 text-white"></i> Back to Shop
-     </a>
+     </a> -->
+     <div class="card mt-3">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb  mt-3 ps-3">
+            <li class="breadcrumb-item"><a href="/">Home</a></li>
+             <li class="breadcrumb-item"><a href="/shop">Shop</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Checkout</li>
+        </ol>
+    </nav>
+    </div>
     <div class="row pt-3">
 
         <!-- Order Summary -->
@@ -137,9 +146,51 @@
                         <label for="Thana" class="form-label">Thana</label>
                         <input type="text" class="form-control" id="Thana" required>
                     </div>
+                    
+                </div>
+                <!--  -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6 class="mt-2">Terms & Condition<span style="color:red; font-size:20px;">*</span></h6>
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="acceptTerms" required>
+                            <label class="form-check-label" for="acceptTerms">
+                               Once an order has been confirmed, there is no option available to add, remove, or cancel the order. Please check the parcel with the delivery person present. No complaints will be taken after the delivery man has left.
+                               <br><br>
+                                অর্ডার কনফার্ম হয়ে যাওয়ার পর কোনো নতুন প্রোডাক্ট যুক্ত, অপসারণ কিংবা অর্ডার বাতিল করা যাবে না। ডেলিভারি ম্যানের উপস্থিতিতে পার্সেল চেক করে নিবেন। ডেলিভারি ম্যান চলে যাবার পর কোন অভিযোগ গ্রহণ করা হবে না।
+                            </label>
+                            <!-- <label class="form-check-label" for="acceptTerms">
+                               অর্ডার কনফার্ম হয়ে যাওয়ার পর কোনো নতুন প্রোডাক্ট যুক্ত, অপসারণ কিংবা অর্ডার বাতিল করা যাবে না। ডেলিভারি ম্যানের উপস্থিতিতে পার্সেল চেক করে নিবেন। ডেলিভারি ম্যান চলে যাবার পর কোন অভিযোগ গ্রহণ করা হবে না।
+                            </label> -->
+                        </div>
+                    </div>
+                </div>
+                <!--  -->
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="acceptTerms" required>
+                            <label class="form-check-label" for="acceptTerms">
+                                I have read and agree to the
+                                <a href="/termsandcondition/" target="_blank" class="fw-bold" style="text-decoration: none; color: inherit;"
+                                    onmouseover="this.style.textDecoration='underline';" onmouseout="this.style.textDecoration='none';"
+                                    onmousedown="this.style.textDecoration='underline';" onmouseup="this.style.textDecoration='underline';">
+                                    Terms & Conditions
+                                </a>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <h6 class="mt-2">
+                            Notes(optional)
+                        </h6>
+                        <textarea placeholder="Notes about your order,e.g. special notes for delivery." class="form-control" id="notes"prows="3"></textarea>
+                    </div>
                 </div>
                 <div class="mb-3">
-                    <h6>Payment Method</h6>
+                    <h6 class="mt-2">Payment Method</h6>
             
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="payment" id="full_payment" value="full_payment">
@@ -308,6 +359,10 @@ $(document).ready(function() {
 <script>
 $(document).ready(function(){
     $("#checkoutForm").on("submit", function(e){
+        if (!this.checkValidity()) {
+        e.preventDefault(); // 🚫 stop POST request
+        alert("⚠️ Please fill in all required fields before placing the order.");
+    }
         e.preventDefault(); // ফর্ম সাবমিট বন্ধ করলাম
 
         let formData = {
@@ -316,6 +371,7 @@ $(document).ready(function(){
             address: $("#address").val(),
             district: $("#District").val(),
             thana: $("#Thana").val(),
+            notes : $('#notes').val(),
             payment_method: $("input[name='payment']:checked").val()
         };
 
@@ -324,7 +380,7 @@ $(document).ready(function(){
             method: "POST",
             data: JSON.stringify(formData),
             contentType: "application/json",
-            headers: { "X-CSRFToken": getCookie("csrftoken") }, // Django CSRF Token
+            // headers: { "X-CSRFToken": getCookie("csrftoken") }, // Django CSRF Token
             success: function(response){
                 // alert("Order placed successfully!");
                 if(response.status === "success"){
@@ -337,22 +393,6 @@ $(document).ready(function(){
             }
         });
     });
-
-    // Django CSRF token function
-    // function getCookie(name) {
-    //     let cookieValue = null;
-    //     if (document.cookie && document.cookie !== "") {
-    //         let cookies = document.cookie.split(";");
-    //         for (let i = 0; i < cookies.length; i++) {
-    //             let cookie = cookies[i].trim();
-    //             if (cookie.substring(0, name.length + 1) === (name + "=")) {
-    //                 cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-    //                 break;
-    //             }
-    //         }
-    //     }
-    //     return cookieValue;
-    // }
 });
 </script>
 {% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'mainshop/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="d-flex justify-content-center align-items-center" style="min-height: 80vh; background-color: #f8f9fa;">
+  <div class="text-center bg-white p-5 rounded-4 shadow" style="max-width: 500px;">
+    
+    <h1 class="display-1 fw-bold text-danger">404</h1>
+    <h4 class="fw-bold mb-3">Oops! Page Not Found 😕</h4>
+    <p class="text-muted mb-4">
+      The page you’re looking for doesn’t exist or may have been moved.
+    </p>
+    <a href="/" class="btn btn-danger text-white rounded-pill px-4 py-2">
+      <i class="bi bi-house-door-fill me-1 text-white"></i>Go Home
+    </a>
+  </div>
+</div>
+{% endblock %}

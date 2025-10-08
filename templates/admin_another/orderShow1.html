@@ -1,0 +1,183 @@
+{% extends 'admin_another/adminbase.html' %}
+{% block content %}
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg"> <!-- Added modal-lg for wider modal to accommodate content -->
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Product Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="printableArea"> <!-- Added ID to the modal-body for easy targeting -->
+                <h5 class="text-center fw-bold">Art & Craft-CrystaL</h5>
+                <div class="d-flex gap-3 justify-content-between mb-3">
+                    <p class="fw-bold mb-0">Order id : #1000532</p>
+                    <p class="fw-bold mb-0">Order date : 10/12/25</p>
+                </div>
+                <p class="mb-1"> Address:chandgaon,chittagong</p>
+                <p class="mb-1"> Districk:chittagong</p>
+                <p class="mb-1"> Thana:chandgaon</p>
+                <p class="mb-3"> Mobile No:01677240979</p>
+
+                <table class="table table-striped table-hover table-bordered caption-top">
+                    <caption>Product Summary</caption>
+                    <thead>
+                        <tr>
+                            <th scope="col">Name</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Qty</th>
+                            <th scope="col">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Product A</td>
+                            <td>$10.00</td>
+                            <td>2</td>
+                            <td>$20.00</td>
+                        </tr>
+                        <tr>
+                            <td>Product B</td>
+                            <td>$15.50</td>
+                            <td>1</td>
+                            <td>$15.50</td>
+                        </tr>
+                        <tr>
+                            <td>Product C</td>
+                            <td>$5.75</td>
+                            <td>3</td>
+                            <td>$17.25</td>
+                        </tr>
+                        <!-- Add more rows as needed -->
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <td colspan="3" class="text-end fw-bold">Grand Total:</td>
+                            <td class="fw-bold">$52.75</td>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary" onclick="printModalContent()">Print Details</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function printModalContent() {
+        var printContents = document.getElementById('printableArea').innerHTML;
+        var originalContents = document.body.innerHTML;
+
+        document.body.innerHTML = printContents; // Temporarily replace body content with modal content
+        window.print(); // Trigger browser print dialog
+        document.body.innerHTML = originalContents; // Restore original body content
+        // You might want to reload the page or handle modal state if it causes issues
+        // For simple cases, this approach works.
+    }
+</script>
+<!-- modal end -->
+ <div class="container">
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">OrderId</th>
+            <th scope="col" colspan="2">Order Details</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td colspan="2">
+                    <div class="card shadow-sm border-0 rounded-3" style="max-width: 450px;">
+                        <div class="card-body">
+                            <!-- Order Item 1 -->
+                            <div class="mb-1 pb-1 border-bottom">
+                                <p class="text-muted mb-1" style="font-size: 0.7em;">This is some extra info about Larry’s order.</p>
+                                <div class="d-flex justify-content-between flex-wrap">
+                                    <span class="fw-bold text-dark">
+                                        <span class="badge bg-success" style="font-size: 0.7em;">price: 100</span>
+                                    </span>
+                                    <span class="fw-bold text-dark">
+                                        <span class="badge bg-success" style="font-size: 0.7em;">Quantity: 3</span>
+                                    </span>
+                                    <span class="fw-bold text-dark">
+                                        <span class="badge bg-success" style="font-size: 0.7em;">Variant: This one</span>
+                                    </span>
+                                </div>
+                            </div>
+            
+                            <!-- Order Item 2 -->
+                             <div class="mb-1 pb-1 border-bottom">
+                                <p class="text-muted mb-1" style="font-size: 0.7em;">This is some extra info about Larry’s order.</p>
+                                <div class="d-flex justify-content-between flex-wrap">
+                                    <span class="fw-bold text-dark">
+                                        <span class="badge bg-success" style="font-size: 0.7em;">price: 100</span>
+                                    </span>
+                                    <span class="fw-bold text-dark">
+                                        <span class="badge bg-success" style="font-size: 0.7em;">Quantity: 3</span>
+                                    </span>
+                                    <span class="fw-bold text-dark">
+                                        <span class="badge bg-success" style="font-size: 0.7em;">Variant: This one</span>
+                                    </span>
+                                </div>
+                            </div>
+            
+                            <!-- Order Item 3 -->
+                            <div class="mb-1 pb- border-bottom">
+                                <p class="text-muted mb-1" style="font-size: 0.7em;">This is some extra info about Larry’s order.</p>
+                                <div class="d-flex justify-content-between flex-wrap">
+                                    <span class="fw-bold text-dark">
+                                        <span class="badge bg-success" style="font-size: 0.7em;">price: 100</span>
+                                    </span>
+                                    <span class="fw-bold text-dark">
+                                        <span class="badge bg-success" style="font-size: 0.7em;">Quantity: 3</span>
+                                    </span>
+                                    <span class="fw-bold text-dark">
+                                        <span class="badge bg-success" style="font-size: 0.7em;">Variant: This one</span>
+                                    </span>
+                                </div>
+                            </div>
+            
+                            <!-- Total Price Section -->
+                            <div class="d-flex justify-content-between align-items-center mt-3">
+                                <h6 class="fw-bold mb-0" style="font-family: Arial, sans-serif; font-size: 18px; color: #222;">
+                                    Total Price: $250
+                                </h6>
+                                <a href="#" class="btn btn-dark btn-sm text-white" data-bs-toggle="modal" data-bs-target="#exampleModal">View more</a>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+                <td><button class="btn btn-danger btn-sm ms-2" title="Delete">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </td>
+            </tr>
+    </tbody>
+</table>
+</div>
+<script>
+  function printModalContent() {
+    document.activeElement.blur(); // 🧩 fix accessibility warning
+    const printContents = document.getElementById('printableArea').innerHTML;
+    const newWindow = window.open('', '_blank', 'width=900,height=700');
+    newWindow.document.write(`
+      <html>
+        <head>
+          <title>Print Order Details</title>
+          <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        </head>
+        <body class="p-4">
+          ${printContents}
+          <script>window.print();<\/script>
+        </body>
+      </html>
+    `);
+    newWindow.document.close();
+  }
+</script>
+
+{% endblock %}

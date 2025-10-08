@@ -17,7 +17,7 @@ Including another URLconf
 from rest_framework.routers import DefaultRouter
 from django.contrib import admin
 from django.urls import path,include
-from mainshop.views import home,shopSingleproduct,ShopList,SearchProduct,add_to_cart,show_cart,checkout,remove_from_cart,admindashbaord,CategoryViewSet,SubCategoryViewSet,SliderItemViewSet,adminproduct,ProductViewSet,ProductImageViewSet,create_product,ProductListAPIView,ProductDetailAPIView,loginAdminSite,admin_logout,get_all_session,orderItem,WatchlistAPI
+from mainshop.views import home,shopSingleproduct,ShopList,SearchProduct,add_to_cart,show_cart,checkout,remove_from_cart,admindashbaord,CategoryViewSet,SubCategoryViewSet,SliderItemViewSet,adminproduct,ProductViewSet,ProductImageViewSet,create_product,ProductListAPIView,ProductDetailAPIView,loginAdminSite,admin_logout,get_all_session,orderItem,WatchlistAPI,termsandcondition,privacyPolicy,ordershow,OrderListAPIView,OrderDetailAPIView,custom_404
 # watchlist_add_cookie,show_cookies,remove_from_wishlist,
 from rest_framework_nested import routers
 
@@ -56,7 +56,22 @@ urlpatterns = [
     path("api/watchlist/", WatchlistAPI.as_view(), name="watchlist-api"),
     #updated watchlist
     path("get-session/", get_all_session, name=" get_all_session"),
+    #order
     path("order/",orderItem, name="orderItem"),
+    #order template show
+    path('ordershow/',ordershow,name="orderItem"),
+    #order data show as api
+    path('ordersdata/', OrderListAPIView.as_view(), name='order-api-list'),
+    #order data delete
+    path('ordersdata/<int:pk>/',OrderDetailAPIView.as_view(), name='order-api-delete'),
+
+    #Terms & Conditon
+    path("termsandcondition/",termsandcondition, name="termsandcondition"),
+    path("privacypolicy/",privacyPolicy, name="privacyPolicy"),
+    #404 page
+    path("errorpage/",custom_404, name="custom_404"),
+
+
 
 ]
 urlpatterns += router.urls

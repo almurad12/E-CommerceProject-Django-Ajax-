@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Product,category,sub_category,sliderItem,ProductImage
+from .models import Product,category,sub_category,sliderItem,ProductImage, Order
 
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
@@ -91,3 +91,13 @@ class ProductSerializer(serializers.ModelSerializer):
         if obj.coverphoto and hasattr(obj.coverphoto, "url"):
             return request.build_absolute_uri(obj.coverphoto.url)
         return None
+    
+
+class  OrderSerializer(serializers.ModelSerializer):
+    formatted_date = serializers.SerializerMethodField()
+    class Meta:
+        model =  Order
+        fields = "__all__"
+    
+    def get_formatted_date(self, obj):
+        return obj.created_at.strftime("%b %d, %Y %I:%M %p")  # e.g. "Oct 05, 2025 09:12 PM"

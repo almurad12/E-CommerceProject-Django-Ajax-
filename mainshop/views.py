@@ -11,7 +11,7 @@ import json
 from django.views.decorators.csrf import csrf_exempt
 ##this is for admin
 from mainshop.models import category,sub_category
-from mainshop.serializers import CategorySerializer,SubCategorySerializer,SliderItemSerializer, ProductSerializer, ProductImageSerializer
+from mainshop.serializers import CategorySerializer,SubCategorySerializer,SliderItemSerializer, ProductSerializer, ProductImageSerializer,OrderSerializer
 from rest_framework import viewsets
 from rest_framework.exceptions import NotFound
 from rest_framework import status
@@ -26,7 +26,7 @@ from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from rest_framework.permissions import IsAdminUser
-
+from mainshop.models import Order
 def home(request):
     #for slide filtering
     slides = sliderItem.objects.all()
@@ -634,6 +634,13 @@ def orderItem(request):
             }
 
             print("📦 Order Data:",productOrdered,order_details)
+            ##now save in database
+            order = Order.objects.create(
+             order_products =productOrdered,
+              address =order_details
+            )
+            ##now save in database end
+
             # 🟢 Order complete হলে cart empty করা
             if "cart" in request.session:
                 del request.session["cart"]   # পুরোপুরি মুছে ফেলবে
@@ -653,8 +660,48 @@ def orderItem(request):
         # value =request.session["cart"]
 
     # return JsonResponse(value,))
+#show All order
+def ordershow(request):
+    return render(request,'admin_another/orderShow.html')
+# def ordershow(request):
+#     orders = Order.objects.all().values()  # returns list of dicts
+#     return JsonResponse(list(orders), safe=False)
 
-
-def get_all_session(request):
+class OrderListAPIView(APIView):
+    def get(self, request):
+        orders = Order.objects.all().order_by('-id')
+        serializer = OrderSerializer(orders, many=True)
+        return Response(serializer.data)
     
+class OrderDetailAPIView(APIView):
+    def get(self, request, pk):
+        try:
+            order = Order.objects.get(pk=pk)
+            serializer = OrderSerializer(order)
+            return Response(serializer.data)
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+
+    def delete(self, request, pk):
+        try:
+            order = Order.objects.get(pk=pk)
+            order.delete()
+            return Response({"message": "Order deleted successfully"}, status=status.HTTP_204_NO_CONTENT)
+        except Order.DoesNotExist:
+            return Response({"error": "Order not found"}, status=status.HTTP_404_NOT_FOUND)
+
+
+def get_all_session(request):    
     return JsonResponse(dict(request.session))
+
+#Terms and conditon
+def termsandcondition(request):
+    return render(request, "mainshop/termsAndCondition.html")
+
+#Privacy policy
+def privacyPolicy(request):
+    return render(request, "mainshop/privacyPolicy.html")
+
+#404 page
+def custom_404(request):
+    return render(request, 'mainshop/404page.html', status=404)
