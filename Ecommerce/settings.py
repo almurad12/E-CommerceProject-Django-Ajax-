@@ -25,10 +25,10 @@ STATIC_URL = '/static/'
 SECRET_KEY = 'django-insecure-ym17-t6)nm82h+pemrhnvtd2f-s2ag^$=b=ntyicvr-8i#*k)t'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-# DEBUG = False
+# DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['*','http://127.0.0.1:8000/']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -132,7 +132,8 @@ USE_I18N = True
 
 USE_TZ = True
 #white noise
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = ' staticfiles'
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Static files (CSS, JavaScript, Images)

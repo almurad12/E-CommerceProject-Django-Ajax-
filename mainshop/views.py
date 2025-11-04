@@ -17,10 +17,6 @@ from rest_framework.exceptions import NotFound
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from django.utils.decorators import method_decorator
-# Create your views here.
-# def base(request):
-#      return render(request,'mainshop/base.html',{'slides': slides})
-
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login,logout
 from django.contrib import messages
@@ -429,19 +425,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 #         if request.accepted_renderer.format == 'html':
 #             return Response(template_name='admin_another/subcategory.html')
         # return Response(serializer.data)
-'''
-class SubCategoryViewSet(viewsets.ModelViewSet):
-    queryset = sub_category.objects.select_related('category').all()
-    serializer_class = SubCategorySerializer
-    renderer_classes = [JSONRenderer, TemplateHTMLRenderer]
-    permission_classes = [IsAdminUser]
-    def list(self, request, *args, **kwargs):
-        queryset = self.get_queryset()
-        serializer = self.get_serializer(queryset, many=True)
-        if request.accepted_renderer.format == 'html':
-            return Response(template_name='admin_another/subcategory.html')
-        return Response(serializer.data)
-    '''
+
     # Force JSON response for DataTables
     
 
@@ -605,13 +589,6 @@ def admin_logout(request):
     logout(request)   # this clears the session
     return redirect("loginAdminSite")  # replace with your login page name
 
-
-
-# def 
-
-# 
-
-
 def checkout(request):
     value =request.session["cart"]
     return render(request,'mainshop/checkout.html',{"value":value})
@@ -663,9 +640,6 @@ def orderItem(request):
 #show All order
 def ordershow(request):
     return render(request,'admin_another/orderShow.html')
-# def ordershow(request):
-#     orders = Order.objects.all().values()  # returns list of dicts
-#     return JsonResponse(list(orders), safe=False)
 
 class OrderListAPIView(APIView):
     def get(self, request):
@@ -703,5 +677,5 @@ def privacyPolicy(request):
     return render(request, "mainshop/privacyPolicy.html")
 
 #404 page
-def custom_404(request):
+def custom_404(request,exception):
     return render(request, 'mainshop/404page.html', status=404)

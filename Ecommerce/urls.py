@@ -23,7 +23,12 @@ from django.urls import path, re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
+##
+from django.urls import re_path as url
+from django.views.static import serve
+# ✅ Import your custom 404 view
+from mainshop.views import custom_404
+###
 schema_view = get_schema_view(
     openapi.Info(
         title="My API",
@@ -36,6 +41,9 @@ schema_view = get_schema_view(
 )
 
 urlpatterns = [
+    url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
+    ###
     path('admin/', admin.site.urls),
     # Swagger UI
     path("swagger/", schema_view.with_ui("swagger", cache_timeout=0), name="schema-swagger-ui"),
@@ -47,4 +55,12 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls", namespace="rest_framework")),
     path('shopone/',include('shop1.urls')),
     path('',include('mainshop.urls')),
-]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+]
+
+
+handler404 = custom_404
+# + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+# ✅ Serve static & media files when DEBUG=False (no Nginx)
+# if not settings.DEBUG:
+#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+#     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
